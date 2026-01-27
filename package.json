@@ -35,6 +35,7 @@
     "typescript-eslint": "^8.53.1"
   },
   "dependencies": {
+    "reflect-metadata": "^0.2.2",
     "typedi": "^0.10.0"
   },
   "peerDependencies": {
