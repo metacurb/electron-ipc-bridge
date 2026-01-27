@@ -20,8 +20,6 @@ export interface IpcApplicationMetadata {
 
 export type Constructor<T = unknown> = new (...args: unknown[]) => T;
 
-export type ControllerConstructor<T = unknown> = new (...args: unknown[]) => T;
-
 export type Disposer = () => void;
 
 export interface IpcDecoratorOptions {
