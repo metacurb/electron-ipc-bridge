@@ -8,7 +8,7 @@ describe("IpcHandleOnce decorator", () => {
   test("should attach metadata with handleOnce type", () => {
     @Controller()
     class TestController {
-      @IpcHandleOnce("foo")
+      @IpcHandleOnce()
       fooHandler() {
         return "bar";
       }

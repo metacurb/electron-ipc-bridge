@@ -8,7 +8,7 @@ describe("IpcHandle decorator", () => {
   test("should attach metadata with handle type", () => {
     @Controller()
     class TestController {
-      @IpcHandle("foo")
+      @IpcHandle()
       fooHandler() {
         return "bar";
       }

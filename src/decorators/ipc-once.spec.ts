@@ -6,7 +6,7 @@ import { IPC_PENDING_HANDLERS } from "./utils/create-ipc-decorator";
 describe("IpcOnce decorator", () => {
   test("should attach metadata with once type", () => {
     class TestController {
-      @IpcOnce("foo")
+      @IpcOnce()
       fooHandler() {
         return "bar";
       }

@@ -5,17 +5,6 @@ import { buildChannel } from "../utils/naming";
 
 import { registerHandler } from "./register-handler";
 
-jest.mock("electron", () => ({
-  ipcMain: {
-    handle: jest.fn(),
-    handleOnce: jest.fn(),
-    on: jest.fn(),
-    once: jest.fn(),
-    removeHandler: jest.fn(),
-    removeListener: jest.fn(),
-  },
-}));
-
 jest.mock("../utils/naming");
 
 const mockBuildChannel = jest.mocked(buildChannel);
