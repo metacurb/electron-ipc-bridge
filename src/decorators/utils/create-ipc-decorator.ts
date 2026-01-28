@@ -1,5 +1,4 @@
 import { IpcDecoratorOptions, IpcHandlerMetadata, IpcHandlerType } from "../../metadata/types";
-import { toSnakeCase } from "../../utils/to-snake-case";
 
 export const IPC_PENDING_HANDLERS = Symbol("ipc:pending_handlers");
 
@@ -9,7 +8,7 @@ export const createIpcDecorator =
     return (target, propertyKey, descriptor: PropertyDescriptor) => {
       const handlerMeta: IpcHandlerMetadata = {
         handler: descriptor.value,
-        methodName: toSnakeCase(String(propertyKey)),
+        methodName: String(propertyKey),
         rawEvent: !!options?.rawEvent,
         type,
       };

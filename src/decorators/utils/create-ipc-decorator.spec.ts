@@ -12,7 +12,7 @@ describe("createIpcDecorator", () => {
   test("should attach metadata", () => {
     class TestController {
       @TestDecorator()
-      method() {}
+      methodName() {}
     }
 
     const [meta]: IpcHandlerMetadata[] = Reflect.getOwnMetadata(
@@ -22,7 +22,7 @@ describe("createIpcDecorator", () => {
 
     expect(meta).toEqual<IpcHandlerMetadata>({
       handler: expect.any(Function),
-      methodName: "method",
+      methodName: "methodName",
       rawEvent: false,
       type: "handle",
     });
