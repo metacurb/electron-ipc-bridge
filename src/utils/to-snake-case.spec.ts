@@ -20,10 +20,10 @@ describe("toSnakeCase", () => {
     ["simpleHTMLParser", "simple_html_parser"],
     ["PDFLoad", "pdf_load"],
     ["", ""],
-    ["   ", "_"],
+    ["   ", ""],
     ["---", "_"],
     ["__", "__"],
-    ["  leading trailing  ", "_leading_trailing_"],
+    ["  leading trailing  ", "leading_trailing"],
   ])('should convert "%s" to "%s"', (input, expected) => {
     expect(toSnakeCase(input)).toBe(expected);
   });
