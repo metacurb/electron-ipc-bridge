@@ -16,6 +16,7 @@ export interface IpcHandlerMetadata {
 
 export interface IpcApplicationMetadata {
   controllers: Map<string, IpcControllerMetadata>;
+  disposers: Disposer[];
 }
 
 export type Constructor<T = unknown> = new (...args: unknown[]) => T;

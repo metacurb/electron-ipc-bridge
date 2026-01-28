@@ -1,6 +1,6 @@
 import Container from "typedi";
 
-import { createControllerMetadata } from "../metadata/controller-metadata";
+import { setControllerMetadata } from "../metadata/set-controller-metadata";
 import { Constructor, IpcHandlerMetadata } from "../metadata/types";
 
 import { IPC_PENDING_HANDLERS } from "./utils/create-ipc-decorator";
@@ -8,7 +8,7 @@ import { IPC_PENDING_HANDLERS } from "./utils/create-ipc-decorator";
 export const IpcController = (): ClassDecorator => (target) => {
   const ctor = target as unknown as Constructor;
 
-  const meta = createControllerMetadata(ctor);
+  const meta = setControllerMetadata(ctor);
 
   const pending: IpcHandlerMetadata[] = Reflect.getOwnMetadata(IPC_PENDING_HANDLERS, target) || [];
 

@@ -1,14 +1,14 @@
 import Container from "typedi";
 
-import { createControllerMetadata } from "../metadata/controller-metadata";
+import { setControllerMetadata } from "../metadata/set-controller-metadata";
 import { IpcControllerMetadata } from "../metadata/types";
 
 import { IpcController } from "./ipc-controller";
 import { IPC_PENDING_HANDLERS } from "./utils/create-ipc-decorator";
 
-jest.mock("../metadata/controller-metadata");
+jest.mock("../metadata/set-controller-metadata");
 
-const mockCreateControllerMetadata = jest.mocked(createControllerMetadata);
+const mockCreateControllerMetadata = jest.mocked(setControllerMetadata);
 
 describe("IpcController decorator", () => {
   beforeEach(() => {
