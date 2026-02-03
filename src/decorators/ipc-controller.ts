@@ -4,11 +4,12 @@ import { Constructor, PendingHandlerMetadata } from "../metadata/types";
 import { createChannelName } from "../utils/create-channel-name";
 
 export const IpcController = (): ClassDecorator => (target) => {
-  const ctor = target as unknown as Constructor;
+  const ctor = target as unknown as Constructor<object>;
 
   const meta = setControllerMetadata(ctor);
 
-  const pending: PendingHandlerMetadata[] = Reflect.getMetadata(IPC_PENDING_HANDLERS, target) || [];
+  const pending: PendingHandlerMetadata[] =
+    Reflect.getMetadata(IPC_PENDING_HANDLERS, ctor.prototype) || [];
 
   for (const handler of pending) {
     if (meta.handlers.has(handler.methodName)) {

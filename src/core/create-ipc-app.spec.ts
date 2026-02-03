@@ -125,4 +125,37 @@ describe("createIpcApp", () => {
       }),
     ).toThrow("Duplicate namespace 'same_namespace' found in controllers.");
   });
+
+  test("should throw if controllers is not an array", () => {
+    expect(() =>
+      createIpcApp({
+        // @ts-expect-error testing invalid input
+        controllers: null,
+        resolver: mockResolver,
+        window: mockWindow,
+      }),
+    ).toThrow("controllers must be an array");
+  });
+
+  test("should throw if controllers contains non-functions", () => {
+    expect(() =>
+      createIpcApp({
+        // @ts-expect-error testing invalid input
+        controllers: ["not a function"],
+        resolver: mockResolver,
+        window: mockWindow,
+      }),
+    ).toThrow("controllers must contain only constructor functions");
+  });
+
+  test("should throw if resolver is missing resolve method", () => {
+    expect(() =>
+      createIpcApp({
+        controllers,
+        // @ts-expect-error testing invalid input
+        resolver: {},
+        window: mockWindow,
+      }),
+    ).toThrow("resolver must have a resolve() method");
+  });
 });

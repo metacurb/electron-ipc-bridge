@@ -29,6 +29,9 @@ export interface IpcApplicationMetadata {
   disposers: Disposer[];
 }
 
-export type Constructor<T = unknown> = new (...args: unknown[]) => T;
+export interface Constructor<T = unknown> {
+  new (...args: unknown[]): T;
+  prototype: T;
+}
 
 export type Disposer = () => void;

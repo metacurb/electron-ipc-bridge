@@ -1,9 +1,11 @@
 import { IPC_PENDING_HANDLERS } from "../metadata/constants";
+import { getControllerMetadata } from "../metadata/get-controller-metadata";
 import { setControllerMetadata } from "../metadata/set-controller-metadata";
 import { IpcHandlerMetadata } from "../metadata/types";
 import { createChannelName } from "../utils/create-channel-name";
 
 import { IpcController } from "./ipc-controller";
+import { IpcHandle } from "./ipc-handle";
 
 jest.mock("../metadata/set-controller-metadata");
 jest.mock("../utils/create-channel-name");
@@ -33,7 +35,7 @@ describe("IpcController decorator", () => {
     ];
 
     class TestController {}
-    Reflect.defineMetadata(IPC_PENDING_HANDLERS, pending, TestController);
+    Reflect.defineMetadata(IPC_PENDING_HANDLERS, pending, TestController.prototype);
 
     IpcController()(TestController);
 
@@ -61,7 +63,7 @@ describe("IpcController decorator", () => {
     const pending = [{ handler: jest.fn(), methodName: "handleSomething", type: "handle" }];
 
     class TestController {}
-    Reflect.defineMetadata(IPC_PENDING_HANDLERS, pending, TestController);
+    Reflect.defineMetadata(IPC_PENDING_HANDLERS, pending, TestController.prototype);
 
     expect(() => IpcController()(TestController)).toThrow("Duplicate handler name handleSomething");
   });

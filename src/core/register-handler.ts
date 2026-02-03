@@ -23,15 +23,18 @@ export const registerHandler = (
 
   const { channel, type } = handler;
 
-  if (type === "handle" || type === "handleOnce") {
-    ipcMain[type](channel, boundHandler);
-    return () => ipcMain.removeHandler(channel);
+  switch (type) {
+    case "handle":
+    case "handleOnce":
+      ipcMain[type](channel, boundHandler);
+      return () => ipcMain.removeHandler(channel);
+    case "on":
+    case "once":
+      ipcMain[type](channel, boundHandler);
+      return () => ipcMain.removeListener(channel, boundHandler);
+    default: {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      throw new Error(`Unknown handler type: ${type}`);
+    }
   }
-
-  if (type === "on" || type === "once") {
-    ipcMain[type](channel, boundHandler);
-    return () => ipcMain.removeListener(channel, boundHandler);
-  }
-
-  return undefined;
 };

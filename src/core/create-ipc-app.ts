@@ -24,6 +24,16 @@ export const createIpcApp = ({
   resolver,
   window,
 }: IpcAppOptions): IpcApp => {
+  if (!Array.isArray(controllers)) {
+    throw new Error("controllers must be an array");
+  }
+  if (controllers.length > 0 && controllers.some((c) => typeof c !== "function")) {
+    throw new Error("controllers must contain only constructor functions");
+  }
+  if (typeof resolver?.resolve !== "function") {
+    throw new Error("resolver must have a resolve() method");
+  }
+
   const namespaces = new Set<string>();
 
   for (const Controller of controllers) {
