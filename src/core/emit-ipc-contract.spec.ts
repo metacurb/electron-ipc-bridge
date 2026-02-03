@@ -25,6 +25,7 @@ describe("emitIpcContract", () => {
     } as unknown as jest.Mocked<Electron.WebContents>;
 
     mockWindow = {
+      isDestroyed: jest.fn().mockReturnValue(false),
       webContents: mockWebContents,
     } as unknown as jest.Mocked<BrowserWindow>;
 
@@ -35,6 +36,12 @@ describe("emitIpcContract", () => {
 
   it("should do nothing if targetWindow is undefined", () => {
     emitIpcContract(controllers);
+    expect(mockWebContents.send).not.toHaveBeenCalled();
+  });
+
+  it("should do nothing if targetWindow is destroyed", () => {
+    mockWindow.isDestroyed.mockReturnValue(true);
+    emitIpcContract(controllers, mockWindow);
     expect(mockWebContents.send).not.toHaveBeenCalled();
   });
 

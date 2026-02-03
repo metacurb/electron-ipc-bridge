@@ -6,7 +6,7 @@ import { IPC_CONTRACT_CHANNEL } from "./constants";
 import { serializeControllers } from "./serialize-controllers";
 
 export const emitIpcContract = (controllers: Constructor[], targetWindow?: BrowserWindow) => {
-  if (!targetWindow) return;
+  if (!targetWindow || targetWindow.isDestroyed()) return;
 
   const serialized = serializeControllers(controllers);
   const { webContents } = targetWindow;
