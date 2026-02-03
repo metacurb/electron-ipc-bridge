@@ -11,3 +11,7 @@ export const ipcRenderer = {
   invoke: jest.fn(),
   send: jest.fn(),
 };
+
+export const BrowserWindow = {
+  fromWebContents: jest.fn(),
+};

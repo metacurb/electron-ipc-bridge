@@ -15,7 +15,7 @@ export interface IpcHandlerMetadata {
   type: IpcHandlerType;
 }
 
-export type ParameterInjectionType = "RawEvent";
+export type ParameterInjectionType = "RawEvent" | "Sender" | "ProcessId" | "Origin" | "Window";
 
 export interface ParameterInjection {
   index: number;
