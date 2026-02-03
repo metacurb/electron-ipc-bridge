@@ -1,5 +1,5 @@
-import { IPC_PENDING_HANDLERS } from "../../metadata/constants";
-import { IpcHandlerType, PendingHandlerMetadata } from "../../metadata/types";
+import { IPC_PARAM_INJECTIONS, IPC_PENDING_HANDLERS } from "../../metadata/constants";
+import { IpcHandlerType, ParameterInjection, PendingHandlerMetadata } from "../../metadata/types";
 
 export const createIpcHandlerDecorator = (type: IpcHandlerType) => (): MethodDecorator => {
   return (target, propertyKey, descriptor: PropertyDescriptor) => {
@@ -7,9 +7,16 @@ export const createIpcHandlerDecorator = (type: IpcHandlerType) => (): MethodDec
       throw new Error(`IPC decorators can only be applied to methods.`);
     }
 
+    const paramInjections: ParameterInjection[] | undefined = Reflect.getOwnMetadata(
+      IPC_PARAM_INJECTIONS,
+      target,
+      propertyKey,
+    );
+
     const handlerMeta: PendingHandlerMetadata = {
       handler: descriptor.value,
       methodName: String(propertyKey),
+      paramInjections,
       type,
     };
 

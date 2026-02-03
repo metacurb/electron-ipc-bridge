@@ -3,6 +3,8 @@ import { ipcMain } from "electron";
 import { wrapWithCorrelation } from "../correlation/wrap-with-correlation";
 import { Disposer, IpcHandlerMetadata } from "../metadata/types";
 
+import { createParameterInjectionWrapper } from "./parameter-injection/create-parameter-injection-wrapper";
+
 type RegisterHandlerConfig = {
   correlation?: boolean;
 };
@@ -12,8 +14,12 @@ export const registerHandler = (
   instance: unknown,
   { correlation }: RegisterHandlerConfig,
 ): Disposer | undefined => {
-  const wrappedHandler = wrapWithCorrelation(handler.handler, correlation);
-  const boundHandler = wrappedHandler.bind(instance);
+  const correlationWrappedHandler = wrapWithCorrelation(handler.handler, correlation);
+  const parameterInjectionWrappedHandler = createParameterInjectionWrapper(
+    correlationWrappedHandler,
+    handler.paramInjections,
+  );
+  const boundHandler = parameterInjectionWrappedHandler.bind(instance);
 
   const { channel, type } = handler;
 

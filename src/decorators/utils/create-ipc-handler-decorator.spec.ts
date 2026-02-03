@@ -1,5 +1,5 @@
-import { IPC_PENDING_HANDLERS } from "../../metadata/constants";
-import { PendingHandlerMetadata } from "../../metadata/types";
+import { IPC_PARAM_INJECTIONS, IPC_PENDING_HANDLERS } from "../../metadata/constants";
+import { ParameterInjection, PendingHandlerMetadata } from "../../metadata/types";
 
 import { createIpcHandlerDecorator } from "./create-ipc-handler-decorator";
 
@@ -24,8 +24,37 @@ describe("createIpcHandlerDecorator", () => {
     expect(meta).toEqual<PendingHandlerMetadata>({
       handler: expect.any(Function),
       methodName: "methodName",
+      paramInjections: undefined,
       type: "handle",
     });
+  });
+
+  test("should include parameter injections if present", () => {
+    class TestController {
+      methodName() {}
+    }
+
+    const mockInjections: ParameterInjection[] = [{ index: 0, type: "RawEvent" }];
+
+    Reflect.defineMetadata(
+      IPC_PARAM_INJECTIONS,
+      mockInjections,
+      TestController.prototype,
+      "methodName",
+    );
+
+    const descriptor = Object.getOwnPropertyDescriptor(TestController.prototype, "methodName")!;
+
+    createIpcHandlerDecorator("handle")()(TestController.prototype, "methodName", descriptor);
+
+    const meta: PendingHandlerMetadata[] = Reflect.getOwnMetadata(
+      IPC_PENDING_HANDLERS,
+      TestController.prototype,
+    );
+
+    const lastMeta = meta[meta.length - 1];
+
+    expect(lastMeta.paramInjections).toEqual(mockInjections);
   });
 
   test("should throw if multiple decorators applied to same method", () => {

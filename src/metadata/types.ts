@@ -11,7 +11,15 @@ export interface IpcHandlerMetadata {
   channel: string;
   handler: (...args: unknown[]) => unknown;
   methodName: string;
+  paramInjections?: ParameterInjection[];
   type: IpcHandlerType;
+}
+
+export type ParameterInjectionType = "RawEvent";
+
+export interface ParameterInjection {
+  index: number;
+  type: ParameterInjectionType;
 }
 
 export type PendingHandlerMetadata = Omit<IpcHandlerMetadata, "channel">;

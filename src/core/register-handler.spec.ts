@@ -64,4 +64,97 @@ describe("registerHandler", () => {
     dispose!();
     expect(removeFn).toHaveBeenCalledWith(mockChannel, expect.any(Function));
   });
+
+  describe("parameter injection", () => {
+    test("should inject event at index 0", () => {
+      const handler: IpcHandlerMetadata = {
+        ...createHandler("handle"),
+        paramInjections: [{ index: 0, type: "RawEvent" }],
+      };
+
+      registerHandler(handler, mockInstance, { correlation: false });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const registeredHandler = (ipcMain.handle as jest.Mock).mock.calls[0][1];
+      const mockEvent = { sender: { id: 123 } };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      registeredHandler(mockEvent, "payload1", "payload2");
+
+      expect(mockInstance.testMethod).toHaveBeenCalledWith(mockEvent, "payload1", "payload2");
+    });
+
+    test("should inject event at index 1", () => {
+      const handler: IpcHandlerMetadata = {
+        ...createHandler("handle"),
+        paramInjections: [{ index: 1, type: "RawEvent" }],
+      };
+
+      registerHandler(handler, mockInstance, { correlation: false });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const registeredHandler = (ipcMain.handle as jest.Mock).mock.calls[0][1];
+      const mockEvent = { sender: { id: 123 } };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      registeredHandler(mockEvent, "payload1", "payload2");
+
+      expect(mockInstance.testMethod).toHaveBeenCalledWith("payload1", mockEvent, "payload2");
+    });
+
+    test("should inject event at index 2 (last)", () => {
+      const handler: IpcHandlerMetadata = {
+        ...createHandler("handle"),
+        paramInjections: [{ index: 2, type: "RawEvent" }],
+      };
+
+      registerHandler(handler, mockInstance, { correlation: false });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const registeredHandler = (ipcMain.handle as jest.Mock).mock.calls[0][1];
+      const mockEvent = { sender: { id: 123 } };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      registeredHandler(mockEvent, "payload1", "payload2");
+
+      expect(mockInstance.testMethod).toHaveBeenCalledWith("payload1", "payload2", mockEvent);
+    });
+
+    test("should strip event when no injections are present", () => {
+      const handler: IpcHandlerMetadata = {
+        ...createHandler("handle"),
+        paramInjections: [],
+      };
+
+      registerHandler(handler, mockInstance, { correlation: false });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const registeredHandler = (ipcMain.handle as jest.Mock).mock.calls[0][1];
+      const mockEvent = { sender: { id: 123 } };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      registeredHandler(mockEvent, "payload1", "payload2");
+
+      expect(mockInstance.testMethod).toHaveBeenCalledWith("payload1", "payload2");
+      expect(mockInstance.testMethod).not.toHaveBeenCalledWith(
+        expect.objectContaining({ sender: expect.anything() }),
+        expect.anything(),
+        expect.anything(),
+      );
+    });
+
+    test("should work with correlation and event injection", () => {
+      const handler: IpcHandlerMetadata = {
+        ...createHandler("handle"),
+        paramInjections: [{ index: 1, type: "RawEvent" }],
+      };
+
+      registerHandler(handler, mockInstance, { correlation: true });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const registeredHandler = (ipcMain.handle as jest.Mock).mock.calls[0][1];
+      const mockEvent = { sender: { id: 123 } };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      registeredHandler(mockEvent, "payload");
+
+      expect(mockWrapWithCorrelation).toHaveBeenCalledWith(mockInstance.testMethod, true);
+      expect(mockInstance.testMethod).toHaveBeenCalledWith("payload", mockEvent);
+    });
+  });
 });
