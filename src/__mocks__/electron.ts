@@ -9,6 +9,7 @@ export const ipcMain = {
 
 export const ipcRenderer = {
   invoke: jest.fn(),
+  once: jest.fn(),
   send: jest.fn(),
 };
 

@@ -16,3 +16,7 @@ export { createParamDecorator } from "./decorators/utils/create-param-decorator"
 export { createIpcApp, IpcApp, IpcAppOptions } from "./core/create-ipc-app";
 
 export { getCorrelationId } from "./correlation/get-correlation-id";
+
+export { setupPreload } from "./preload";
+export type { InferIpcApi, IpcContract } from "./preload/infer-ipc-api";
+export type { Disposer, HandleMethod, PreloadApi, PreloadNamespace } from "./preload/types";
