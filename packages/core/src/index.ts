@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 export { IpcController } from "./decorators/class/ipc-controller";
 
 export { IpcHandle } from "./decorators/method/ipc-handle";
@@ -13,7 +15,8 @@ export { Window } from "./decorators/param/window";
 
 export { createParamDecorator } from "./decorators/utils/create-param-decorator";
 
-export { createIpcApp, IpcApp, IpcAppOptions } from "./core/create-ipc-app";
+export { createIpcApp } from "./core/create-ipc-app";
+export type { IpcApp, IpcAppOptions } from "./core/create-ipc-app";
 
 export { getCorrelationId } from "./correlation/get-correlation-id";
 
