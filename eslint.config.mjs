@@ -22,7 +22,7 @@ export default defineConfig([
       sourceType: "module",
       parserOptions: {
         projectService: {
-          allowDefaultProject: ["*.js", "*.mjs", "packages/*/jest.config.js"],
+          allowDefaultProject: ["*.js", "*.mjs", "packages/*/jest.config.js", "packages/*/scripts/*.mjs"],
         },
         tsconfigRootDir: import.meta.dirname,
       },

@@ -1,5 +1,5 @@
+import { createIpcApp } from "@electron-ipc-controller/core";
 import { app, BrowserWindow } from "electron";
-import { createIpcApp } from "electron-ipc-controller";
 import * as path from "path";
 
 import { CounterController } from "./controllers/counter.controller";
@@ -10,7 +10,7 @@ function createWindow(): void {
   mainWindow = new BrowserWindow({
     height: 600,
     webPreferences: {
-      preload: require.resolve("electron-ipc-controller/preload.js"),
+      preload: require.resolve("@electron-ipc-controller/core/preload.js"),
     },
     width: 800,
   });

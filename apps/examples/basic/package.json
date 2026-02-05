@@ -10,7 +10,7 @@
     "dev": "tsc -w & electron ."
   },
   "dependencies": {
-    "electron-ipc-controller": "workspace:*"
+    "@electron-ipc-controller/core": "workspace:*"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
