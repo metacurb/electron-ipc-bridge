@@ -1,5 +1,5 @@
 {
-  "name": "electron-ipc-controller",
+  "name": "@electron-ipc-controller/core",
   "version": "0.1.0",
   "description": "A class-based IPC abstraction for Electron applications",
   "main": "./dist/index.js",

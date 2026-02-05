@@ -1,5 +1,13 @@
+import {
+  CorrelationId,
+  IpcController,
+  IpcHandle,
+  IpcOn,
+  ProcessId,
+  Sender,
+  Window,
+} from "@electron-ipc-controller/core";
 import { BrowserWindow, WebContents } from "electron";
-import { CorrelationId, IpcController, IpcHandle, IpcOn, ProcessId, Sender, Window } from "electron-ipc-controller";
 
 @IpcController()
 export class CounterController {
