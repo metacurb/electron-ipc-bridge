@@ -16,7 +16,7 @@
       "import": "./dist/preload/index.mjs",
       "require": "./dist/preload/index.js"
     },
-    "./preload.js": "./dist/preload.entry.js"
+    "./preload.js": "./dist/preload/preload.entry.js"
   },
   "typesVersions": {
     "*": {
