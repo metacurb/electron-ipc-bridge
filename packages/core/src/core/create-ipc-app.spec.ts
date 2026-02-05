@@ -1,18 +1,16 @@
-import { BrowserWindow } from "electron";
-
 import { getControllerMetadata } from "../metadata/get-controller-metadata";
 
 import { assembleIpc } from "./assemble-ipc";
 import { createIpcApp } from "./create-ipc-app";
-import { emitIpcContract } from "./emit-ipc-contract";
+import { registerContractHandler } from "./register-contract-handler";
 import { ControllerResolver } from "./types";
 
 jest.mock("../metadata/get-controller-metadata");
 jest.mock("./assemble-ipc");
-jest.mock("./emit-ipc-contract");
+jest.mock("./register-contract-handler");
 
 const mockAssembleIpc = jest.mocked(assembleIpc);
-const mockEmitIpcContract = jest.mocked(emitIpcContract);
+const mockRegisterContractHandler = jest.mocked(registerContractHandler);
 const mockGetControllerMetadata = jest.mocked(getControllerMetadata);
 
 const mockResolver: ControllerResolver = {
@@ -22,8 +20,6 @@ const mockResolver: ControllerResolver = {
 const controllers = [class A {}, class B {}];
 
 describe("createIpcApp", () => {
-  const mockWindow = {} as BrowserWindow;
-
   beforeEach(() => {
     jest.clearAllMocks();
     mockGetControllerMetadata.mockImplementation((target) => ({
@@ -32,9 +28,10 @@ describe("createIpcApp", () => {
       namespace: target.name.toLowerCase(),
       target,
     }));
+    mockRegisterContractHandler.mockReturnValue(jest.fn());
   });
 
-  test("should call assembleIpc with correct args, and emit IPC contract", () => {
+  test("should call assembleIpc with correct args, and register contract handler", () => {
     const mockDisposer = jest.fn();
     mockAssembleIpc.mockReturnValue([mockDisposer]);
 
@@ -42,14 +39,13 @@ describe("createIpcApp", () => {
       controllers,
       correlation: false,
       resolver: mockResolver,
-      window: mockWindow,
     });
 
     expect(mockAssembleIpc).toHaveBeenCalledWith(controllers, {
       correlation: false,
       resolver: mockResolver,
     });
-    expect(mockEmitIpcContract).toHaveBeenCalledWith(controllers, mockWindow);
+    expect(mockRegisterContractHandler).toHaveBeenCalledWith(controllers);
   });
 
   test("should return an object with a dispose method that calls all disposers", () => {
@@ -60,7 +56,6 @@ describe("createIpcApp", () => {
     const app = createIpcApp({
       controllers,
       resolver: mockResolver,
-      window: mockWindow,
     });
 
     app.dispose();
@@ -76,7 +71,6 @@ describe("createIpcApp", () => {
     const app = createIpcApp({
       controllers,
       resolver: mockResolver,
-      window: mockWindow,
     });
 
     app.dispose();
@@ -97,7 +91,6 @@ describe("createIpcApp", () => {
     const app = createIpcApp({
       controllers,
       resolver: mockResolver,
-      window: mockWindow,
     });
 
     app.dispose();
@@ -121,7 +114,6 @@ describe("createIpcApp", () => {
       createIpcApp({
         controllers,
         resolver: mockResolver,
-        window: mockWindow,
       }),
     ).toThrow("Duplicate namespace 'same_namespace' found in controllers.");
   });
@@ -132,7 +124,6 @@ describe("createIpcApp", () => {
         // @ts-expect-error testing invalid input
         controllers: null,
         resolver: mockResolver,
-        window: mockWindow,
       }),
     ).toThrow("controllers must be an array");
   });
@@ -143,7 +134,6 @@ describe("createIpcApp", () => {
         // @ts-expect-error testing invalid input
         controllers: ["not a function"],
         resolver: mockResolver,
-        window: mockWindow,
       }),
     ).toThrow("controllers must contain only constructor functions");
   });
@@ -154,7 +144,6 @@ describe("createIpcApp", () => {
         controllers,
         // @ts-expect-error testing invalid input
         resolver: {},
-        window: mockWindow,
       }),
     ).toThrow("resolver must have a resolve() method");
   });

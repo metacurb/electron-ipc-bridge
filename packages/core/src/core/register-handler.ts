@@ -14,24 +14,26 @@ export const registerHandler = (
   instance: unknown,
   { correlation }: RegisterHandlerConfig,
 ): Disposer | undefined => {
-  const correlationWrappedHandler = wrapWithCorrelation(handler.handler, correlation);
+  const boundOriginalHandler = handler.handler.bind(instance);
+
   const parameterInjectionWrappedHandler = createParameterInjectionWrapper(
-    correlationWrappedHandler,
+    boundOriginalHandler,
     handler.paramInjections,
   );
-  const boundHandler = parameterInjectionWrappedHandler.bind(instance);
+
+  const correlationWrappedHandler = wrapWithCorrelation(parameterInjectionWrappedHandler, correlation);
 
   const { channel, type } = handler;
 
   switch (type) {
     case "handle":
     case "handleOnce":
-      ipcMain[type](channel, boundHandler);
+      ipcMain[type](channel, correlationWrappedHandler);
       return () => ipcMain.removeHandler(channel);
     case "on":
     case "once":
-      ipcMain[type](channel, boundHandler);
-      return () => ipcMain.removeListener(channel, boundHandler);
+      ipcMain[type](channel, correlationWrappedHandler);
+      return () => ipcMain.removeListener(channel, correlationWrappedHandler);
     default: {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`Unknown handler type: ${type}`);

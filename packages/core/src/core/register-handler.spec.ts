@@ -47,7 +47,7 @@ describe("registerHandler", () => {
     });
 
     expect(registerFn).toHaveBeenCalledWith(mockChannel, expect.any(Function));
-    expect(mockWrapWithCorrelation).toHaveBeenCalledWith(mockInstance.testMethod, false);
+    expect(mockWrapWithCorrelation).toHaveBeenCalledWith(expect.any(Function), false);
     expect(dispose).toBeDefined();
     dispose!();
     expect(removeFn).toHaveBeenCalledWith(mockChannel);
@@ -63,7 +63,7 @@ describe("registerHandler", () => {
     });
 
     expect(registerFn).toHaveBeenCalledWith(mockChannel, expect.any(Function));
-    expect(mockWrapWithCorrelation).toHaveBeenCalledWith(mockInstance.testMethod, false);
+    expect(mockWrapWithCorrelation).toHaveBeenCalledWith(expect.any(Function), false);
     expect(dispose).toBeDefined();
     dispose!();
     expect(removeFn).toHaveBeenCalledWith(mockChannel, expect.any(Function));
@@ -148,7 +148,7 @@ describe("registerHandler", () => {
       const mockEvent = { sender: { id: 123 } } as IpcMainInvokeEvent;
       registeredHandler(mockEvent, "payload");
 
-      expect(mockWrapWithCorrelation).toHaveBeenCalledWith(mockInstance.testMethod, true);
+      expect(mockWrapWithCorrelation).toHaveBeenCalledWith(expect.any(Function), true);
       expect(mockInstance.testMethod).toHaveBeenCalledWith("payload", mockEvent);
     });
   });

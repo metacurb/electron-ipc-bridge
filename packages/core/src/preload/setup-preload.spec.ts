@@ -1,4 +1,4 @@
-import { ipcRenderer, IpcRendererEvent } from "electron";
+import { ipcRenderer } from "electron";
 
 import { IPC_CONTRACT_CHANNEL } from "../core/constants";
 import { SerializedIpcContract } from "../core/types";
@@ -15,17 +15,11 @@ describe("setupPreload", () => {
   it("should resolve with api when contract is received", async () => {
     const contract: SerializedIpcContract = { controllers: [] };
 
-    mockIpcRender.once.mockImplementation((channel, listener) => {
-      if (channel === IPC_CONTRACT_CHANNEL) {
-        listener({} as IpcRendererEvent, contract);
-      }
-
-      return mockIpcRender;
-    });
+    mockIpcRender.invoke.mockResolvedValue(contract);
 
     const api = await setupPreload();
 
-    expect(mockIpcRender.once).toHaveBeenCalledWith(IPC_CONTRACT_CHANNEL, expect.any(Function));
+    expect(mockIpcRender.invoke).toHaveBeenCalledWith(IPC_CONTRACT_CHANNEL);
     expect(api).toEqual({});
   });
 });

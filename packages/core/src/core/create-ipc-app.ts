@@ -1,24 +1,21 @@
-import { BrowserWindow } from "electron";
-
 import { getControllerMetadata } from "../metadata/get-controller-metadata";
-import { Constructor } from "../metadata/types";
+import { Constructor, Disposer } from "../metadata/types";
 
 import { assembleIpc } from "./assemble-ipc";
-import { emitIpcContract } from "./emit-ipc-contract";
+import { registerContractHandler } from "./register-contract-handler";
 import { ControllerResolver } from "./types";
 
 export interface IpcAppOptions {
   controllers: Constructor[];
   correlation?: boolean;
   resolver: ControllerResolver;
-  window: BrowserWindow;
 }
 
 export interface IpcApp {
   dispose(): void;
 }
 
-export const createIpcApp = ({ controllers, correlation, resolver, window }: IpcAppOptions): IpcApp => {
+export const createIpcApp = ({ controllers, correlation, resolver }: IpcAppOptions): IpcApp => {
   if (!Array.isArray(controllers)) {
     throw new Error("controllers must be an array");
   }
@@ -39,9 +36,10 @@ export const createIpcApp = ({ controllers, correlation, resolver, window }: Ipc
     namespaces.add(meta.namespace);
   }
 
-  const disposers = assembleIpc(controllers, { correlation, resolver });
+  const disposers: Disposer[] = [];
 
-  emitIpcContract(controllers, window);
+  disposers.push(...assembleIpc(controllers, { correlation, resolver }));
+  disposers.push(registerContractHandler(controllers));
 
   return {
     dispose() {
