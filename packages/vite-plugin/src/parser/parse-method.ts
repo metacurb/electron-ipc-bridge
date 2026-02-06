@@ -1,4 +1,10 @@
 import {
+  IPC_DECORATOR_HANDLE,
+  IPC_DECORATOR_HANDLE_ONCE,
+  IPC_DECORATOR_ON,
+  IPC_DECORATOR_ONCE,
+} from "@electron-ipc-controller/shared";
+import {
   getModifiers,
   Identifier,
   isCallExpression,
@@ -11,7 +17,12 @@ import {
 import { getDecorator } from "./get-decorator.js";
 import { MethodMetadata, ParamMetadata } from "./types.js";
 
-const METHOD_DECORATORS = ["IpcHandle", "IpcOn", "IpcHandleOnce", "IpcOnce"] as const;
+const METHOD_DECORATORS = [
+  IPC_DECORATOR_HANDLE,
+  IPC_DECORATOR_ON,
+  IPC_DECORATOR_HANDLE_ONCE,
+  IPC_DECORATOR_ONCE,
+] as const;
 const INJECTION_DECORATORS = ["Sender", "RawEvent", "ProcessId", "Origin", "Window", "CorrelationId"];
 
 export const parseMethod = (node: MethodDeclaration, typeChecker: TypeChecker): MethodMetadata | null => {

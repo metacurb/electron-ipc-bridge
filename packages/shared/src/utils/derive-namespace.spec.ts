@@ -1,5 +1,5 @@
-import { deriveNamespace } from "./derive-namespace";
-import { toCamelCase } from "./to-camel-case";
+import { deriveNamespace } from "./derive-namespace.js";
+import { toCamelCase } from "./to-camel-case.js";
 
 jest.mock("./to-camel-case");
 
@@ -17,7 +17,7 @@ describe("Naming Utils", () => {
       ["UserController", "User"],
       ["UserControllerController", "UserController"],
       ["UserProfileController", "UserProfile"],
-    ])('should remove "Controller" suffix from %s', (input, expected) => {
+    ])('should remove "Controller" suffix from %s', (input: string, expected: string) => {
       expect(deriveNamespace(input)).toBe(expected);
     });
   });

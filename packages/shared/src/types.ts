@@ -1,4 +1,5 @@
 export type IpcHandlerType = "handle" | "handleOnce" | "on" | "once";
+export type IpcDecoratorName = "IpcHandle" | "IpcHandleOnce" | "IpcOn" | "IpcOnce";
 
 export interface SerializedHandler {
   channel: string;

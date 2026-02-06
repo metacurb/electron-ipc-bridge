@@ -1,6 +1,5 @@
+import { SerializedIpcContract } from "@electron-ipc-controller/shared";
 import { ipcRenderer } from "electron";
-
-import { SerializedIpcContract } from "../shared/types";
 
 import { HandleMethod, PreloadApi, PreloadNamespace, SendMethod } from "./types";
 

@@ -1,4 +1,4 @@
-import { toSnakeCase } from "./to-snake-case";
+import { toSnakeCase } from "./to-snake-case.js";
 
 describe("toSnakeCase", () => {
   test.each([

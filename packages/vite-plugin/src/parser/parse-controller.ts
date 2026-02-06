@@ -1,3 +1,4 @@
+import { deriveNamespace } from "@electron-ipc-controller/shared";
 import {
   ClassDeclaration,
   Decorator,
@@ -19,8 +20,7 @@ export const parseController = (
   typeChecker: TypeChecker,
 ): ControllerMetadata => {
   const className = node.name!.text;
-  let namespace = className.replace(/Controller$/, "");
-  namespace = namespace.charAt(0).toLowerCase() + namespace.slice(1);
+  let namespace = deriveNamespace(className);
 
   // Check for custom namespace argument: @Controller("custom")
   if (isCallExpression(decorator.expression)) {

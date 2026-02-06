@@ -1,7 +1,8 @@
+import { IpcHandlerType } from "@electron-ipc-controller/shared";
 import { ipcMain, IpcMainInvokeEvent } from "electron";
 
 import { wrapWithCorrelation } from "../correlation/wrap-with-correlation";
-import { IpcHandlerMetadata, IpcHandlerType } from "../metadata/types";
+import { IpcHandlerMetadata } from "../metadata/types";
 import { createChannelName } from "../utils/create-channel-name";
 
 import { registerHandler } from "./register-handler";

@@ -30,6 +30,7 @@
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
+    "postinstall": "pnpm build",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
@@ -38,6 +39,7 @@
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "@electron-ipc-controller/shared": "workspace:*",
     "electron": "^40.1.0",
     "esbuild": "^0.27.2"
   }

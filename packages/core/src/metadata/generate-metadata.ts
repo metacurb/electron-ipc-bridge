@@ -1,6 +1,5 @@
+import { deriveNamespace } from "@electron-ipc-controller/shared";
 import { randomUUID } from "node:crypto";
-
-import { deriveNamespace } from "../utils/derive-namespace";
 
 import { Constructor, IpcControllerMetadata } from "./types";
 

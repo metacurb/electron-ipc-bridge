@@ -1,5 +1,7 @@
+import { IPC_DECORATOR_ON, IPC_DECORATOR_ONCE } from "@electron-ipc-controller/shared";
+
 export const getReturnType = (decorator: string, originalReturnType: string): string => {
-  if (decorator === "IpcOn" || decorator === "IpcOnce") {
+  if (decorator === IPC_DECORATOR_ON || decorator === IPC_DECORATOR_ONCE) {
     return "void";
   }
 

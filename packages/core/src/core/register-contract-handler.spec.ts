@@ -1,6 +1,6 @@
+import { IPC_CONTRACT_CHANNEL } from "@electron-ipc-controller/shared";
 import { ipcMain, IpcMainInvokeEvent } from "electron";
 
-import { IPC_CONTRACT_CHANNEL } from "./constants";
 import { registerContractHandler } from "./register-contract-handler";
 import { serializeControllers } from "./serialize-controllers";
 

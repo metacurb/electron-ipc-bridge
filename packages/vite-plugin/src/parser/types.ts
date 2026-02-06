@@ -5,8 +5,10 @@ export interface ControllerMetadata {
   namespace: string;
 }
 
+import type { IpcDecoratorName } from "@electron-ipc-controller/shared";
+
 export interface MethodMetadata {
-  decoratorName: "IpcHandle" | "IpcOn" | "IpcHandleOnce" | "IpcOnce";
+  decoratorName: IpcDecoratorName;
   isAsync: boolean;
   name: string;
   params: ParamMetadata[];

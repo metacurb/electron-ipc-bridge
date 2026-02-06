@@ -1,7 +1,8 @@
-import { createChannelName } from "./create-channel-name";
-import { toSnakeCase } from "./to-snake-case";
+import { toSnakeCase } from "@electron-ipc-controller/shared";
 
-jest.mock("./to-snake-case");
+import { createChannelName } from "./create-channel-name";
+
+jest.mock("@electron-ipc-controller/shared");
 
 const mockToSnakeCase = jest.mocked(toSnakeCase);
 

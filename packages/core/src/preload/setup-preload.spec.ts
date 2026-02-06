@@ -1,7 +1,5 @@
+import { IPC_CONTRACT_CHANNEL, SerializedIpcContract } from "@electron-ipc-controller/shared";
 import { contextBridge, ipcRenderer } from "electron";
-
-import { IPC_CONTRACT_CHANNEL } from "../shared/constants";
-import { SerializedIpcContract } from "../shared/types";
 
 import { setupPreload } from "./setup-preload";
 

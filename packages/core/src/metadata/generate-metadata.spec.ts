@@ -1,11 +1,10 @@
+import { deriveNamespace } from "@electron-ipc-controller/shared";
 import { randomUUID, UUID } from "node:crypto";
-
-import { deriveNamespace } from "../utils/derive-namespace";
 
 import { generateMetadata } from "./generate-metadata";
 
 jest.mock("node:crypto");
-jest.mock("../utils/derive-namespace");
+jest.mock("@electron-ipc-controller/shared");
 
 const testUuid = "test-uuid";
 const testDerivedNamespace = "test-derived-namespace";

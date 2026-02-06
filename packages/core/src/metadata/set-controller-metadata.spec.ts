@@ -1,6 +1,5 @@
 import { IPC_CONTROLLER_METADATA } from "./constants";
 import { generateMetadata } from "./generate-metadata";
-import { getControllerMetadata } from "./get-controller-metadata";
 import { setControllerMetadata } from "./set-controller-metadata";
 import { IpcControllerMetadata } from "./types";
 

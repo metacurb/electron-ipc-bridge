@@ -6,6 +6,7 @@
 
 ```ts
 // main/controllers/settings.controller.ts
+import { WebContents } from "electron";
 import { Controller, IpcHandle, IpcOn } from "framework";
 
 @Controller()
@@ -19,7 +20,12 @@ export class SettingsController {
   }
 
   @IpcHandle()
-  async set(newSettings: { theme: string }) {
+  async set(
+    newSettings: { theme: string },
+    @CorrelationId() correlationId: string,
+    @Sender(): WebContents,
+    ) {
+    console.log({ correlationId, senderId: sender.id }, "Updating settings")
     return this.settingsService.setSettings(newSettings);
   }
 

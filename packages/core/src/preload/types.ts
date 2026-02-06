@@ -1,4 +1,4 @@
-import { IpcHandlerType } from "../shared/types";
+import { IpcHandlerType } from "@electron-ipc-controller/shared";
 
 export type Disposer = () => void;
 

@@ -1,11 +1,9 @@
 module.exports = {
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
-    "^@electron-ipc-controller/shared$": "<rootDir>/../shared/src/index.ts",
   },
   preset: "ts-jest",
-  roots: ["<rootDir>/src", "<rootDir>/../shared"],
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  roots: ["<rootDir>/src"],
   testEnvironment: "node",
   testMatch: ["<rootDir>/src/**/*.spec.ts"],
   transform: {

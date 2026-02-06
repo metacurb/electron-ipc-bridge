@@ -1,4 +1,4 @@
-import { toCamelCase } from "./to-camel-case";
+import { toCamelCase } from "./to-camel-case.js";
 
 describe("toCamelCase", () => {
   test.each([

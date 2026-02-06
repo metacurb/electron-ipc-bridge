@@ -1,5 +1,7 @@
+import { IpcHandlerType } from "@electron-ipc-controller/shared";
+
 import { IPC_PARAM_INJECTIONS, IPC_PENDING_HANDLERS } from "../../metadata/constants";
-import { IpcHandlerType, ParameterInjection, PendingHandlerMetadata } from "../../metadata/types";
+import { ParameterInjection, PendingHandlerMetadata } from "../../metadata/types";
 
 export const createIpcHandlerDecorator =
   (type: IpcHandlerType) =>

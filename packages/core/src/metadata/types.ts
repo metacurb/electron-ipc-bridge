@@ -1,3 +1,4 @@
+import { IpcHandlerType } from "@electron-ipc-controller/shared";
 import { IpcMainEvent, IpcMainInvokeEvent } from "electron";
 
 export interface IpcControllerMetadata {
@@ -6,8 +7,6 @@ export interface IpcControllerMetadata {
   namespace: string;
   target: Constructor;
 }
-
-export type IpcHandlerType = "handle" | "handleOnce" | "on" | "once";
 
 export interface IpcHandlerMetadata {
   channel: string;
