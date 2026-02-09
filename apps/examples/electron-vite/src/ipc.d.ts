@@ -19,11 +19,11 @@ export enum TestingEnum {
 
 export interface IpcApi {
   counter: {
+    complexExample(input: ComplexInput): Promise<ComplexInput>
     get(): Promise<number>
     inc(incrementBy?: number): Promise<number>
     ping(): Promise<string>
     reset(): void
-    complexExample(input: ComplexInput): Promise<ComplexInput>
   }
 }
 

@@ -7,8 +7,13 @@ import pkg from "../package.json" with { type: "json" };
 import { generateTypes } from "./generator/generate-types.js";
 import { findControllers } from "./parser/find-controllers.js";
 
+/**
+ * Options for the electron-ipc-controller Vite plugin.
+ */
 export interface PluginOptions {
+  /** Path to your main process entry file. @default "src/main/index.ts" */
   main?: string;
+  /** Output path for generated type definitions. @default "src/ipc.d.ts" */
   output?: string;
 }
 export interface ElectronIpcControllerPlugin {
@@ -18,6 +23,26 @@ export interface ElectronIpcControllerPlugin {
   transform?(code: string, id: string): null | Promise<null>;
 }
 
+import { hashControllerMetadata } from "./hash-metadata.js";
+import { PluginState } from "./plugin-state.js";
+
+/**
+ * Creates a Vite plugin that generates TypeScript type definitions
+ * for your IPC controllers, enabling type-safe `window.ipc` usage in the renderer.
+ *
+ * @param options - Plugin configuration
+ * @returns Vite plugin instance
+ *
+ * @example
+ * ```ts
+ * // vite.config.ts
+ * import { electronIpcController } from "@electron-ipc-controller/vite-plugin";
+ *
+ * export default defineConfig({
+ *   plugins: [electronIpcController()],
+ * });
+ * ```
+ */
 export function electronIpcController({
   main = "src/main/index.ts",
   output = "src/ipc.d.ts",
@@ -25,11 +50,7 @@ export function electronIpcController({
   const normalizePath = (p: string) => p.replace(/\\/g, "/");
 
   let root = process.cwd();
-  let lastHash: string | null = null;
-  let controllerFiles: Set<string> | null = null;
-  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-  let hasGeneratedOnce = false;
-  const DEBOUNCE_MS = 100;
+  const state = new PluginState();
 
   const generate = () => {
     try {
@@ -47,16 +68,19 @@ export function electronIpcController({
         console.warn(`[${pkg.name}] No createIpcApp() call found in ${entryPath}; generated types will be empty.`);
       }
 
-      // Normalize all paths in the set to forward slashes
-      controllerFiles = new Set([...processedFiles].map(normalizePath));
+      const metadataHash = hashControllerMetadata(controllers);
+      if (!state.updateMetadataHash(metadataHash)) {
+        return;
+      }
+
+      state.setControllerFiles(new Set([...processedFiles].map(normalizePath)));
 
       const typeDef = generateTypes(controllers);
 
       const hash = crypto.createHash("md5").update(typeDef).digest("hex");
-      if (hash === lastHash) {
+      if (!state.updateHash(hash)) {
         return;
       }
-      lastHash = hash;
 
       const absOutput = path.resolve(root, output);
       fs.mkdirSync(path.dirname(absOutput), { recursive: true });
@@ -67,19 +91,10 @@ export function electronIpcController({
     }
   };
 
-  const scheduleGenerate = () => {
-    if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      generate();
-      debounceTimer = null;
-    }, DEBOUNCE_MS);
-  };
-
   return {
     buildStart() {
-      if (!hasGeneratedOnce) {
+      if (state.claimInitialGeneration()) {
         generate();
-        hasGeneratedOnce = true;
       }
     },
     configResolved(config) {
@@ -91,11 +106,9 @@ export function electronIpcController({
 
       const absId = normalizePath(path.resolve(id));
       const mainEntryPath = normalizePath(path.resolve(root, main));
-      const isControllerFile = controllerFiles?.has(absId);
-      const isMainEntry = absId === mainEntryPath;
 
-      if (isControllerFile || isMainEntry) {
-        scheduleGenerate();
+      if (state.shouldRegenerate(absId, mainEntryPath)) {
+        state.scheduleGenerate(generate);
       }
       return null;
     },

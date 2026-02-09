@@ -29,7 +29,6 @@ export const parseMethod = (node: MethodDeclaration, typeChecker: TypeChecker): 
 
   let name = (node.name as Identifier).text;
 
-  // Check for custom method name: @IpcHandle("custom")
   if (isCallExpression(decorator.expression)) {
     const args = decorator.expression.arguments;
     if (args.length > 0 && isStringLiteral(args[0])) {
@@ -63,7 +62,6 @@ export const parseMethod = (node: MethodDeclaration, typeChecker: TypeChecker): 
 
   const filteredParams = params.filter((_, index) => !paramInfos[index].hasInjection);
 
-  // Extract types from return type annotation
   if (node.type) {
     const returnTypeRefs = collectTypeDefinitions(node.type, typeChecker, seen);
     referencedTypes.push(...returnTypeRefs);

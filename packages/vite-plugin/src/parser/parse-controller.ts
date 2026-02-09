@@ -22,7 +22,6 @@ export const parseController = (
   const className = node.name!.text;
   let namespace = deriveNamespace(className);
 
-  // Check for custom namespace argument: @Controller("custom")
   if (isCallExpression(decorator.expression)) {
     const args = decorator.expression.arguments;
     if (args.length > 0 && isStringLiteral(args[0])) {

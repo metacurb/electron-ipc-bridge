@@ -43,10 +43,6 @@ const BUILTIN_TYPE_NAMES = new Set([
   "undefined",
 ]);
 
-/**
- * Walk any AST node (e.g. a parameter type annotation or return type node)
- * and collect TypeDefinitions for every custom type alias, interface, or enum it references.
- */
 export function collectTypeDefinitions(
   node: Node,
   typeChecker: TypeChecker,
@@ -73,7 +69,6 @@ function walkForTypeRefs(node: Node, typeChecker: TypeChecker, seen: Set<string>
 
           const sourceFile = decl.getSourceFile();
           if (!sourceFile.fileName.includes("node_modules")) {
-            // Recursively collect types referenced inside this declaration
             const referencedTypes: TypeDefinition[] = [];
             walkForTypeRefs(decl, typeChecker, seen, referencedTypes);
 
@@ -91,7 +86,6 @@ function walkForTypeRefs(node: Node, typeChecker: TypeChecker, seen: Set<string>
       }
     }
 
-    // Walk generic type arguments (e.g. Promise<CustomType>, Array<Foo>)
     if (node.typeArguments) {
       node.typeArguments.forEach((arg) => walkForTypeRefs(arg, typeChecker, seen, out));
     }
