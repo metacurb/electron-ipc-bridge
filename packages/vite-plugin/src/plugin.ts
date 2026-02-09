@@ -5,7 +5,10 @@ import path from "path";
 import pkg from "../package.json" with { type: "json" };
 
 import { generateTypes } from "./generator/generate-types.js";
+import { hashControllerMetadata } from "./hash-metadata.js";
 import { findControllers } from "./parser/find-controllers.js";
+import { PluginState } from "./plugin-state.js";
+import { resolveApiRootFromPreload } from "./preload/resolve-api-root.js";
 
 /**
  * Options for the electron-ipc-controller Vite plugin.
@@ -15,6 +18,8 @@ export interface PluginOptions {
   main?: string;
   /** Output path for generated type definitions. @default "src/ipc.d.ts" */
   output?: string;
+  /** Path to your preload entry file. @default "src/preload/index.ts" */
+  preload?: string;
 }
 export interface ElectronIpcControllerPlugin {
   buildStart?(): void | Promise<void>;
@@ -23,12 +28,9 @@ export interface ElectronIpcControllerPlugin {
   transform?(code: string, id: string): null | Promise<null>;
 }
 
-import { hashControllerMetadata } from "./hash-metadata.js";
-import { PluginState } from "./plugin-state.js";
-
 /**
  * Creates a Vite plugin that generates TypeScript type definitions
- * for your IPC controllers, enabling type-safe `window.ipc` usage in the renderer.
+ * for your IPC controllers, enabling type-safe `window` usage in the renderer.
  *
  * @param options - Plugin configuration
  * @returns Vite plugin instance
@@ -39,13 +41,14 @@ import { PluginState } from "./plugin-state.js";
  * import { electronIpcController } from "@electron-ipc-controller/vite-plugin";
  *
  * export default defineConfig({
- *   plugins: [electronIpcController()],
+ *   plugins: [electronIpcController(options)],
  * });
  * ```
  */
 export function electronIpcController({
   main = "src/main/index.ts",
   output = "src/ipc.d.ts",
+  preload = "src/preload/index.ts",
 }: PluginOptions = {}): ElectronIpcControllerPlugin {
   const normalizePath = (p: string) => p.replace(/\\/g, "/");
 
@@ -54,6 +57,8 @@ export function electronIpcController({
 
   const generate = () => {
     try {
+      const preloadPath = path.resolve(root, preload);
+      const resolvedApiRoot = resolveApiRootFromPreload(preloadPath);
       const entryPath = path.resolve(root, main);
       if (!fs.existsSync(entryPath)) {
         console.warn(`[${pkg.name}] Main entry not found at: ${entryPath}`);
@@ -72,7 +77,7 @@ export function electronIpcController({
 
       state.setControllerFiles(new Set([...processedFiles].map(normalizePath)));
 
-      const typeDef = generateTypes(controllers);
+      const typeDef = generateTypes(controllers, resolvedApiRoot);
 
       const hash = crypto.createHash("md5").update(typeDef).digest("hex");
       if (!state.updateHash(hash)) return;

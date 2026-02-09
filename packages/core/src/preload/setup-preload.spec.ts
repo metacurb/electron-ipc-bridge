@@ -1,4 +1,4 @@
-import { IPC_CONTRACT_CHANNEL, SerializedIpcContract } from "@electron-ipc-controller/shared";
+import { IPC_CONTRACT_CHANNEL, IPC_DEFAULT_API_ROOT, SerializedIpcContract } from "@electron-ipc-controller/shared";
 import { contextBridge, ipcRenderer } from "electron";
 
 import { setupPreload } from "./setup-preload";
@@ -28,7 +28,7 @@ describe("setupPreload", () => {
 
     await setupPreload();
 
-    expect(mockContextBridge.exposeInMainWorld).toHaveBeenCalledWith("ipc", {});
+    expect(mockContextBridge.exposeInMainWorld).toHaveBeenCalledWith(IPC_DEFAULT_API_ROOT, {});
   });
 
   it("should expose api via contextBridge with custom key", async () => {

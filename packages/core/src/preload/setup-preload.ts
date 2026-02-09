@@ -1,10 +1,10 @@
-import { IPC_CONTRACT_CHANNEL, SerializedIpcContract } from "@electron-ipc-controller/shared";
+import { IPC_CONTRACT_CHANNEL, IPC_DEFAULT_API_ROOT, SerializedIpcContract } from "@electron-ipc-controller/shared";
 import { contextBridge, ipcRenderer } from "electron";
 
 import { createPreloadApi } from "./create-preload-api";
 import { PreloadApi } from "./types";
 
-export const setupPreload = async (apiRoot: string = "ipc"): Promise<PreloadApi> => {
+export const setupPreload = async (apiRoot: string = IPC_DEFAULT_API_ROOT): Promise<PreloadApi> => {
   const contract: SerializedIpcContract = await ipcRenderer.invoke(IPC_CONTRACT_CHANNEL);
   const api = createPreloadApi(contract);
 

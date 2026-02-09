@@ -7,6 +7,7 @@ export type {
 } from "./types.js";
 export {
   IPC_CONTRACT_CHANNEL,
+  IPC_DEFAULT_API_ROOT,
   IPC_DECORATOR_ON,
   IPC_DECORATOR_ONCE,
   IPC_DECORATOR_HANDLE,

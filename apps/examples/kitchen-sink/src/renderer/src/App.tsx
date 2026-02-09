@@ -11,7 +11,7 @@ export function App(): React.JSX.Element {
     setter: React.Dispatch<React.SetStateAction<SectionState>>,
     msg: string,
     error = false
-  ) => setter({ status: msg, error })
+  ) => setter({ error, status: msg })
 
   return (
     <>
@@ -66,7 +66,9 @@ export function App(): React.JSX.Element {
             reset
           </button>
         </div>
-        <div className={`status ${counterStatus.error ? 'error' : ''}`}>{counterStatus.status || '—'}</div>
+        <div className={`status ${counterStatus.error ? 'error' : ''}`}>
+          {counterStatus.status || '—'}
+        </div>
       </section>
 
       <section className="section">
@@ -76,8 +78,8 @@ export function App(): React.JSX.Element {
             onClick={async () => {
               try {
                 const input = {
-                  id: 'x',
                   count: 1,
+                  id: 'x',
                   nested: { flag: true, kind: 'a' as const },
                   tags: ['a', 'b'],
                   union: 42
@@ -167,7 +169,9 @@ export function App(): React.JSX.Element {
             withRawEvent
           </button>
         </div>
-        <div className={`status ${utilStatus.error ? 'error' : ''}`}>{utilStatus.status || '—'}</div>
+        <div className={`status ${utilStatus.error ? 'error' : ''}`}>
+          {utilStatus.status || '—'}
+        </div>
       </section>
     </>
   )

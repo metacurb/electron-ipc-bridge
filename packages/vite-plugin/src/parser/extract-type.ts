@@ -57,9 +57,23 @@ function walkForTypeRefs(node: Node, typeChecker: TypeChecker, seen: Set<string>
   if (isTypeReferenceNode(node)) {
     const sym = typeChecker.getSymbolAtLocation(node.typeName);
     if (sym) {
-      const decl = sym
-        .getDeclarations()
-        ?.find((d) => isTypeAliasDeclaration(d) || isInterfaceDeclaration(d) || isEnumDeclaration(d));
+      const pickDeclaration = (symbol: typeof sym | undefined) =>
+        symbol
+          ?.getDeclarations()
+          ?.find((d) => isTypeAliasDeclaration(d) || isInterfaceDeclaration(d) || isEnumDeclaration(d));
+
+      let decl = pickDeclaration(sym);
+      if (!decl) {
+        try {
+          const aliased = typeChecker.getAliasedSymbol(sym);
+          const aliasedDecl = pickDeclaration(aliased);
+          if (aliasedDecl) {
+            decl = aliasedDecl;
+          }
+        } catch {
+          // Not an alias; fall back to original symbol
+        }
+      }
 
       if (decl && (isTypeAliasDeclaration(decl) || isInterfaceDeclaration(decl) || isEnumDeclaration(decl))) {
         const name = decl.name.text;
