@@ -1,0 +1,69 @@
+import path from "path";
+import { forEachChild, isClassDeclaration, isMethodDeclaration, Node, SourceFile } from "typescript";
+
+import { collectTypeDefinitions } from "./extract-type";
+import { createFixtureProgram } from "./test-utils";
+
+const fixturesDir = path.resolve(__dirname, "fixtures/complex-types");
+
+const getControllerMethodParamType = (sourceFile: SourceFile, className: string, methodName: string): Node => {
+  let typeNode: Node | undefined;
+
+  forEachChild(sourceFile, (node) => {
+    if (isClassDeclaration(node) && node.name?.text === className) {
+      node.members.forEach((member) => {
+        if (isMethodDeclaration(member) && member.name.getText() === methodName && member.parameters[0]?.type) {
+          typeNode = member.parameters[0].type;
+        }
+      });
+    }
+  });
+
+  if (!typeNode) {
+    throw new Error(`Type node for ${className}.${methodName} parameter not found`);
+  }
+
+  return typeNode;
+};
+
+describe("collectTypeDefinitions", () => {
+  it("extracts custom types from complex-types fixture and recurses into referenced types", () => {
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "types.controller.ts");
+
+    const typeNode = getControllerMethodParamType(sourceFile, "TypesController", "test");
+    const results = collectTypeDefinitions(typeNode, typeChecker);
+
+    const names = results.map((r) => r.name);
+    expect(names).toContain("ComplexInput");
+
+    const complex = results.find((r) => r.name === "ComplexInput");
+    expect(complex).toBeDefined();
+    const nestedNames = complex!.referencedTypes.map((r) => r.name);
+    expect(nestedNames).toContain("AnotherType");
+  });
+
+  it("deduplicates with shared seen set", () => {
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "types.controller.ts");
+    const typeNode = getControllerMethodParamType(sourceFile, "TypesController", "test");
+
+    const seen = new Set<string>();
+    const first = collectTypeDefinitions(typeNode, typeChecker, seen);
+    const second = collectTypeDefinitions(typeNode, typeChecker, seen);
+
+    expect(first.length).toBeGreaterThan(0);
+    expect(second.length).toBe(0);
+  });
+
+  it("strips export and declare keywords from emitted definitions", () => {
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "types.controller.ts");
+    const typeNode = getControllerMethodParamType(sourceFile, "TypesController", "test");
+
+    const results = collectTypeDefinitions(typeNode, typeChecker);
+
+    expect(results.length).toBeGreaterThan(0);
+    for (const def of results) {
+      expect(def.definition.startsWith("export ")).toBe(false);
+      expect(def.definition.startsWith("declare ")).toBe(false);
+    }
+  });
+});

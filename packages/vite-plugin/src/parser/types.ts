@@ -1,17 +1,24 @@
+import type { IpcDecoratorName } from "@electron-ipc-controller/shared";
+
 export interface ControllerMetadata {
   className: string;
   filePath: string;
   methods: MethodMetadata[];
   namespace: string;
+  referencedTypes: TypeDefinition[];
 }
-
-import type { IpcDecoratorName } from "@electron-ipc-controller/shared";
+export interface TypeDefinition {
+  definition: string;
+  name: string;
+  referencedTypes: TypeDefinition[];
+}
 
 export interface MethodMetadata {
   decoratorName: IpcDecoratorName;
   isAsync: boolean;
   name: string;
   params: ParamMetadata[];
+  referencedTypes: TypeDefinition[];
   returnType: string;
 }
 

@@ -41,10 +41,13 @@ export const parseController = (
     }
   });
 
+  const referencedTypes = methods.flatMap((m) => m.referencedTypes);
+
   return {
     className,
     filePath: sourceFile.fileName,
     methods,
     namespace,
+    referencedTypes,
   };
 };

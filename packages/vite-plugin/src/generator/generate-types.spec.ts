@@ -36,10 +36,12 @@ describe("generateTypes", () => {
               { name: "a", optional: false, type: "string" },
               { name: "b", optional: true, type: "number" },
             ],
+            referencedTypes: [],
             returnType: "boolean",
           },
         ],
         namespace: "test",
+        referencedTypes: [],
       },
     ];
 
@@ -55,14 +57,34 @@ describe("generateTypes", () => {
       {
         className: "FooController",
         filePath: "/foo.ts",
-        methods: [{ decoratorName: "IpcHandle", isAsync: false, name: "bar", params: [], returnType: "void" }],
+        methods: [
+          {
+            decoratorName: "IpcHandle",
+            isAsync: false,
+            name: "bar",
+            params: [],
+            referencedTypes: [],
+            returnType: "void",
+          },
+        ],
         namespace: "foo",
+        referencedTypes: [],
       },
       {
         className: "BazController",
         filePath: "/baz.ts",
-        methods: [{ decoratorName: "IpcOn", isAsync: false, name: "qux", params: [], returnType: "string" }],
+        methods: [
+          {
+            decoratorName: "IpcOn",
+            isAsync: false,
+            name: "qux",
+            params: [],
+            referencedTypes: [],
+            returnType: "string",
+          },
+        ],
         namespace: "baz",
+        referencedTypes: [],
       },
     ];
 

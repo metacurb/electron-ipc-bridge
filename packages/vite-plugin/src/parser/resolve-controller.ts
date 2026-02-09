@@ -1,4 +1,4 @@
-import { Expression, TypeChecker } from "typescript";
+import { Expression, isClassDeclaration, TypeChecker } from "typescript";
 
 import { extractControllerMetadata } from "./extract-metadata.js";
 import { ControllerMetadata } from "./types.js";
@@ -8,6 +8,7 @@ export const resolveController = (
   typeChecker: TypeChecker,
   processedFiles: Set<string>,
   controllers: ControllerMetadata[],
+  fileCache: Map<string, ControllerMetadata[]>,
 ): void => {
   const symbol = typeChecker.getSymbolAtLocation(node);
   if (!symbol) return;
@@ -23,12 +24,22 @@ export const resolveController = (
   if (!targetSymbol.declarations || targetSymbol.declarations.length === 0) return;
 
   const targetDecl = targetSymbol.declarations[0];
+  if (!isClassDeclaration(targetDecl)) return;
+
   const sourceFile = targetDecl.getSourceFile();
   const fileName = sourceFile.fileName;
+  const className = targetDecl.name?.text;
+  if (!className) return;
 
-  if (processedFiles.has(fileName)) return;
-  processedFiles.add(fileName);
+  let fileControllers = fileCache.get(fileName);
+  if (fileControllers === undefined) {
+    fileControllers = extractControllerMetadata(sourceFile, typeChecker);
+    fileCache.set(fileName, fileControllers);
+    processedFiles.add(fileName);
+  }
 
-  const fileControllers = extractControllerMetadata(sourceFile, typeChecker);
-  controllers.push(...fileControllers);
+  const match = fileControllers.find((c) => c.className === className);
+  if (match) {
+    controllers.push(match);
+  }
 };

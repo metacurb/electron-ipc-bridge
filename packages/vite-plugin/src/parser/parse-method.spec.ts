@@ -1,14 +1,8 @@
 import path from "path";
-import {
-  createProgram,
-  forEachChild,
-  isClassDeclaration,
-  isMethodDeclaration,
-  MethodDeclaration,
-  SourceFile,
-} from "typescript";
+import { forEachChild, isClassDeclaration, isMethodDeclaration, MethodDeclaration, SourceFile } from "typescript";
 
 import { parseMethod } from "./parse-method";
+import { createFixtureProgram } from "./test-utils";
 
 const getMethod = (sourceFile: SourceFile, className: string, methodName: string): MethodDeclaration => {
   let method: MethodDeclaration | undefined;
@@ -32,22 +26,8 @@ const getMethod = (sourceFile: SourceFile, className: string, methodName: string
 describe("parseMethod", () => {
   const fixturesDir = path.resolve(__dirname, "fixtures/simple");
 
-  const parseFixture = (filename: string) => {
-    const filePath = path.join(fixturesDir, filename);
-
-    const program = createProgram([filePath], {
-      emitDecoratorMetadata: true,
-      experimentalDecorators: true,
-    });
-
-    const sourceFile = program.getSourceFile(filePath);
-    if (!sourceFile) throw new Error(`Could not get source file: ${filePath}`);
-
-    return { sourceFile, typeChecker: program.getTypeChecker() };
-  };
-
   it("parses IpcHandle method", () => {
-    const { sourceFile, typeChecker } = parseFixture("counter.controller.ts");
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "counter.controller.ts");
     const method = getMethod(sourceFile, "CounterController", "getCount");
 
     const metadata = parseMethod(method, typeChecker);
@@ -59,7 +39,7 @@ describe("parseMethod", () => {
   });
 
   it("parses method with parameters", () => {
-    const { sourceFile, typeChecker } = parseFixture("counter.controller.ts");
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "counter.controller.ts");
     const method = getMethod(sourceFile, "CounterController", "increment");
 
     const metadata = parseMethod(method, typeChecker);
@@ -72,7 +52,7 @@ describe("parseMethod", () => {
   });
 
   it("parses IpcOn method", () => {
-    const { sourceFile, typeChecker } = parseFixture("counter.controller.ts");
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "counter.controller.ts");
     const method = getMethod(sourceFile, "CounterController", "reset");
 
     const metadata = parseMethod(method, typeChecker);

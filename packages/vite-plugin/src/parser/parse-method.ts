@@ -1,9 +1,5 @@
-import {
-  IPC_DECORATOR_HANDLE,
-  IPC_DECORATOR_HANDLE_ONCE,
-  IPC_DECORATOR_ON,
-  IPC_DECORATOR_ONCE,
-} from "@electron-ipc-controller/shared";
+import { IPC_METHOD_DECORATOR_NAMES, IPC_PARAM_INJECTION_DECORATOR_NAMES } from "@electron-ipc-controller/shared";
+import type { Decorator } from "typescript";
 import {
   getModifiers,
   Identifier,
@@ -14,22 +10,23 @@ import {
   TypeChecker,
 } from "typescript";
 
+import { collectTypeDefinitions } from "./extract-type.js";
 import { getDecorator } from "./get-decorator.js";
-import { MethodMetadata, ParamMetadata } from "./types.js";
-
-const METHOD_DECORATORS = [
-  IPC_DECORATOR_HANDLE,
-  IPC_DECORATOR_ON,
-  IPC_DECORATOR_HANDLE_ONCE,
-  IPC_DECORATOR_ONCE,
-] as const;
-const INJECTION_DECORATORS = ["Sender", "RawEvent", "ProcessId", "Origin", "Window", "CorrelationId"];
+import { MethodMetadata, ParamMetadata, TypeDefinition } from "./types.js";
 
 export const parseMethod = (node: MethodDeclaration, typeChecker: TypeChecker): MethodMetadata | null => {
-  const found = METHOD_DECORATORS.find((d) => getDecorator(node, d));
-  if (!found) return null;
+  let found: (typeof IPC_METHOD_DECORATOR_NAMES)[number] | null = null;
+  let decorator: Decorator | null = null;
+  for (const d of IPC_METHOD_DECORATOR_NAMES) {
+    const dec = getDecorator(node, d);
+    if (dec) {
+      found = d;
+      decorator = dec;
+      break;
+    }
+  }
+  if (!found || !decorator) return null;
 
-  const decorator = getDecorator(node, found)!;
   let name = (node.name as Identifier).text;
 
   // Check for custom method name: @IpcHandle("custom")
@@ -43,28 +40,41 @@ export const parseMethod = (node: MethodDeclaration, typeChecker: TypeChecker): 
   const signature = typeChecker.getSignatureFromDeclaration(node);
   const returnType = signature ? typeChecker.typeToString(signature.getReturnType()) : "Promise<unknown>";
 
-  const params: ParamMetadata[] = node.parameters.map((param) => {
+  const referencedTypes: TypeDefinition[] = [];
+  const seen = new Set<string>();
+
+  const paramInfos = node.parameters.map((param) => {
+    const hasInjection = IPC_PARAM_INJECTION_DECORATOR_NAMES.some((d) => getDecorator(param, d));
+    return { hasInjection, param };
+  });
+
+  const params: ParamMetadata[] = [];
+  for (const { hasInjection, param } of paramInfos) {
     const type = typeChecker.getTypeAtLocation(param);
     const typeString = typeChecker.typeToString(type);
-
-    return {
+    const extracted = !hasInjection && param.type ? collectTypeDefinitions(param.type, typeChecker, seen) : [];
+    referencedTypes.push(...extracted);
+    params.push({
       name: param.name.getText(),
       optional: !!param.questionToken || !!param.initializer,
       type: typeString,
-    };
-  });
+    });
+  }
 
-  const filteredParams = params.filter((_, index) => {
-    const paramNode = node.parameters[index];
-    const hasInjection = INJECTION_DECORATORS.some((d) => getDecorator(paramNode, d));
-    return !hasInjection;
-  });
+  const filteredParams = params.filter((_, index) => !paramInfos[index].hasInjection);
+
+  // Extract types from return type annotation
+  if (node.type) {
+    const returnTypeRefs = collectTypeDefinitions(node.type, typeChecker, seen);
+    referencedTypes.push(...returnTypeRefs);
+  }
 
   return {
     decoratorName: found,
     isAsync: !!getModifiers(node)?.some((m) => m.kind === SyntaxKind.AsyncKeyword),
     name,
     params: filteredParams,
+    referencedTypes,
     returnType,
   };
 };

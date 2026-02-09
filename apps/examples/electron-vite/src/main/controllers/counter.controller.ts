@@ -9,9 +9,30 @@ import {
 } from '@electron-ipc-controller/core'
 import type { BrowserWindow, WebContents } from 'electron/main'
 
+type ComplexInput = {
+  key: string
+  key2: NestedInput
+}
+
+type NestedInput = {
+  key: boolean
+  key2: TestingEnum
+}
+
+enum TestingEnum {
+  ONE = 'one',
+  TWO = 'two',
+  THREE = 'three'
+}
+
 @IpcController()
 export class CounterController {
   private counter = 0
+
+  @IpcHandle()
+  complexExample(input: ComplexInput): ComplexInput {
+    return input
+  }
 
   @IpcHandle('get')
   getCounter(@CorrelationId() correlationId: string): number {

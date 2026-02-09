@@ -7,11 +7,32 @@ import {
   Sender,
   Window,
 } from "@electron-ipc-controller/core";
-import { BrowserWindow, WebContents } from "electron";
+import type { BrowserWindow, WebContents } from "electron/main";
+
+type ComplexInput = {
+  key: string;
+  key2: NestedInput;
+};
+
+type NestedInput = {
+  key: boolean;
+  key2: TestingEnum;
+};
+
+enum TestingEnum {
+  ONE = "one",
+  TWO = "two",
+  THREE = "three",
+}
 
 @IpcController()
 export class CounterController {
   private counter = 0;
+
+  @IpcHandle()
+  complexExample(input: ComplexInput): ComplexInput {
+    return input;
+  }
 
   @IpcHandle("get")
   getCounter(@CorrelationId() correlationId: string): number {
@@ -28,7 +49,7 @@ export class CounterController {
 
   @IpcHandle()
   ping(@ProcessId() processId: number, @Window() window: BrowserWindow): string {
-    console.log({ processId, windowId: window.id }, "[CounterController] Recieved ping");
+    console.log({ processId, windowId: window.id }, "[CounterController] Received ping");
     return "pong";
   }
 

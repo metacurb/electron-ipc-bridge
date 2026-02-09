@@ -1,7 +1,6 @@
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { Plugin } from "vite";
 
 import pkg from "../package.json" with { type: "json" };
 
@@ -12,12 +11,17 @@ export interface PluginOptions {
   main?: string;
   output?: string;
 }
+export interface ElectronIpcControllerPlugin {
+  buildStart?(): void | Promise<void>;
+  configResolved?(config: { root: string }): void | Promise<void>;
+  name: string;
+  transform?(code: string, id: string): null | Promise<null>;
+}
 
 export function electronIpcController({
   main = "src/main/index.ts",
   output = "src/ipc.d.ts",
-}: PluginOptions = {}): Plugin {
-  // Normalize paths to forward slashes for consistent comparison (TypeScript uses forward slashes)
+}: PluginOptions = {}): ElectronIpcControllerPlugin {
   const normalizePath = (p: string) => p.replace(/\\/g, "/");
 
   let root = process.cwd();
@@ -38,6 +42,10 @@ export function electronIpcController({
 
       console.log(`[${pkg.name}] Generating IPC types from ${entryPath}...`);
       const { controllers, processedFiles } = findControllers(entryPath);
+
+      if (controllers.length === 0) {
+        console.warn(`[${pkg.name}] No createIpcApp() call found in ${entryPath}; generated types will be empty.`);
+      }
 
       // Normalize all paths in the set to forward slashes
       controllerFiles = new Set([...processedFiles].map(normalizePath));
@@ -69,14 +77,13 @@ export function electronIpcController({
 
   return {
     buildStart() {
-      // Only generate on the very first build, not on HMR rebuilds
       if (!hasGeneratedOnce) {
         generate();
         hasGeneratedOnce = true;
       }
     },
-    configResolved() {
-      root = process.cwd();
+    configResolved(config) {
+      root = config.root;
     },
     name: "electron-ipc-controller",
     transform(_code, id) {

@@ -1,5 +1,6 @@
 import path from "path";
 import {
+  CallExpression,
   CompilerOptions,
   createProgram,
   findConfigFile,
@@ -9,6 +10,7 @@ import {
   parseJsonConfigFileContent,
   readConfigFile,
   sys,
+  TypeChecker,
 } from "typescript";
 
 import { processCreateIpcAppCall } from "./process-create-ipc-app-call.js";
@@ -17,6 +19,20 @@ import { ControllerMetadata } from "./types.js";
 export interface FindControllersResult {
   controllers: ControllerMetadata[];
   processedFiles: Set<string>;
+}
+
+function isCreateIpcAppCall(node: CallExpression, typeChecker: TypeChecker): boolean {
+  if (!isIdentifier(node.expression)) return false;
+  const sym = typeChecker.getSymbolAtLocation(node.expression);
+  if (!sym) return false;
+  let target = sym;
+  try {
+    const aliased = typeChecker.getAliasedSymbol(sym);
+    if (aliased) target = aliased;
+  } catch {
+    // Not an alias; use original symbol (e.g. local createIpcApp)
+  }
+  return target.name === "createIpcApp";
 }
 
 export const findControllers = (entryFile: string, tsConfigPath?: string): FindControllersResult => {
@@ -44,12 +60,13 @@ export const findControllers = (entryFile: string, tsConfigPath?: string): FindC
 
   const controllers: ControllerMetadata[] = [];
   const processedFiles = new Set<string>();
+  const fileCache = new Map<string, ControllerMetadata[]>();
 
   processedFiles.add(path.resolve(entryFile));
 
   forEachChild(sourceFile, function visit(node) {
-    if (isCallExpression(node) && isIdentifier(node.expression) && node.expression.text === "createIpcApp") {
-      processCreateIpcAppCall(node, typeChecker, processedFiles, controllers);
+    if (isCallExpression(node) && isCreateIpcAppCall(node, typeChecker)) {
+      processCreateIpcAppCall(node, typeChecker, processedFiles, controllers, fileCache);
     }
     forEachChild(node, visit);
   });

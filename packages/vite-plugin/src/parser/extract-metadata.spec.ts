@@ -1,9 +1,10 @@
 import path from "path";
-import { createProgram, Decorator } from "typescript";
+import { Decorator } from "typescript";
 
 import { extractControllerMetadata } from "./extract-metadata";
 import { getDecorator } from "./get-decorator";
 import { parseController } from "./parse-controller";
+import { createFixtureProgram } from "./test-utils";
 import { ControllerMetadata } from "./types";
 
 jest.mock("./get-decorator");
@@ -15,21 +16,6 @@ const mockParseController = jest.mocked(parseController);
 describe("extractControllerMetadata", () => {
   const fixturesDir = path.resolve(__dirname, "fixtures/simple");
 
-  const parseFixture = (filename: string) => {
-    const filePath = path.join(fixturesDir, filename);
-
-    const program = createProgram([filePath], {
-      emitDecoratorMetadata: true,
-      experimentalDecorators: true,
-    });
-
-    const sourceFile = program.getSourceFile(filePath);
-    if (!sourceFile) throw new Error(`Could not get source file: ${filePath}`);
-
-    const typeChecker = program.getTypeChecker();
-    return extractControllerMetadata(sourceFile, typeChecker);
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -38,7 +24,8 @@ describe("extractControllerMetadata", () => {
     mockGetDecorator.mockReturnValue({} as Decorator);
     mockParseController.mockReturnValue({ className: "MockController", namespace: "mock" } as ControllerMetadata);
 
-    const controllers = parseFixture("counter.controller.ts");
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "counter.controller.ts");
+    const controllers = extractControllerMetadata(sourceFile, typeChecker);
 
     expect(mockGetDecorator).toHaveBeenCalledWith(expect.anything(), "IpcController");
     expect(mockParseController).toHaveBeenCalled();
@@ -49,7 +36,8 @@ describe("extractControllerMetadata", () => {
   it("does not call parseController if decorator is not found", () => {
     mockGetDecorator.mockReturnValue(undefined);
 
-    const controllers = parseFixture("counter.controller.ts");
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "counter.controller.ts");
+    const controllers = extractControllerMetadata(sourceFile, typeChecker);
 
     expect(mockGetDecorator).toHaveBeenCalled();
     expect(mockParseController).not.toHaveBeenCalled();

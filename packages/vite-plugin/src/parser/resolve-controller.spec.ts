@@ -1,6 +1,5 @@
 import path from "path";
 import {
-  createProgram,
   forEachChild,
   isArrayLiteralExpression,
   isCallExpression,
@@ -11,6 +10,7 @@ import {
 
 import { extractControllerMetadata } from "./extract-metadata";
 import { resolveController } from "./resolve-controller";
+import { createFixtureProgram } from "./test-utils";
 import { ControllerMetadata } from "./types";
 
 jest.mock("./extract-metadata");
@@ -20,29 +20,19 @@ const mockExtractControllerMetadata = jest.mocked(extractControllerMetadata);
 describe("resolveController", () => {
   const fixturesDir = path.resolve(__dirname, "fixtures/simple");
 
-  const parseFixture = (filename: string) => {
-    const filePath = path.join(fixturesDir, filename);
-
-    const program = createProgram([filePath], {
-      emitDecoratorMetadata: true,
-      experimentalDecorators: true,
-    });
-
-    const sourceFile = program.getSourceFile(filePath);
-    if (!sourceFile) throw new Error(`Could not get source file: ${filePath}`);
-
-    return { sourceFile, typeChecker: program.getTypeChecker() };
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
-    mockExtractControllerMetadata.mockReturnValue([{ className: "MockController" }] as ControllerMetadata[]);
+    mockExtractControllerMetadata.mockReturnValue([
+      { className: "OtherController", namespace: "other" },
+      { className: "CounterController", namespace: "counter" },
+    ] as ControllerMetadata[]);
   });
 
-  it("resolves controller from symbol and calls extractControllerMetadata", () => {
-    const { sourceFile, typeChecker } = parseFixture("index.ts");
+  it("resolves controller from symbol and pushes only the matching class", () => {
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "index.ts");
     const processedFiles = new Set<string>();
     const controllers: ControllerMetadata[] = [];
+    const fileCache = new Map<string, ControllerMetadata[]>();
     let resolved = false;
 
     forEachChild(sourceFile, function visit(node) {
@@ -52,7 +42,7 @@ describe("resolveController", () => {
           const prop = options.properties.find((p) => p.name?.getText() === "controllers");
           if (prop && isPropertyAssignment(prop) && isArrayLiteralExpression(prop.initializer)) {
             const controllerRef = prop.initializer.elements[0];
-            resolveController(controllerRef, typeChecker, processedFiles, controllers);
+            resolveController(controllerRef, typeChecker, processedFiles, controllers, fileCache);
             resolved = true;
           }
         }
@@ -63,7 +53,8 @@ describe("resolveController", () => {
     expect(resolved).toBe(true);
     expect(extractControllerMetadata).toHaveBeenCalled();
     expect(controllers).toHaveLength(1);
-    expect(controllers[0].className).toBe("MockController");
+    expect(controllers[0].className).toBe("CounterController");
+    expect(controllers[0].namespace).toBe("counter");
     expect(processedFiles.size).toBe(1);
   });
 });

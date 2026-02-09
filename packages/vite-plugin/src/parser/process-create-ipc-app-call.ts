@@ -16,6 +16,7 @@ export const processCreateIpcAppCall = (
   typeChecker: TypeChecker,
   processedFiles: Set<string>,
   controllers: ControllerMetadata[],
+  fileCache: Map<string, ControllerMetadata[]>,
 ): void => {
   const args = node.arguments;
   if (args.length === 0) return;
@@ -31,7 +32,7 @@ export const processCreateIpcAppCall = (
 
   if (isArrayLiteralExpression(controllersProp.initializer)) {
     controllersProp.initializer.elements.forEach((element) => {
-      resolveController(element, typeChecker, processedFiles, controllers);
+      resolveController(element, typeChecker, processedFiles, controllers, fileCache);
     });
   }
 };
