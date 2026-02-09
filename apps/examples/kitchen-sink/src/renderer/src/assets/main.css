@@ -1,0 +1,112 @@
+:root {
+  --ev-c-white: #ffffff;
+  --ev-c-black: #1b1b1f;
+  --ev-c-black-soft: #222222;
+  --ev-c-black-mute: #282828;
+  --ev-c-text-1: rgba(255, 255, 245, 0.86);
+  --ev-c-text-2: rgba(235, 235, 245, 0.6);
+  --color-background: var(--ev-c-black);
+  --color-background-mute: var(--ev-c-black-mute);
+  --color-text: var(--ev-c-text-1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  background-image: url('./wavy-lines.svg');
+  background-size: cover;
+  font-family: Inter, system-ui, sans-serif;
+  overflow: auto;
+  user-select: none;
+}
+
+#root {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.sink-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ev-c-text-1);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.section h2 {
+  font-size: 1rem;
+  color: var(--ev-c-text-2);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.section-actions button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #00d9ff, #00a8cc);
+  color: #000;
+  font-weight: 600;
+}
+
+.section-actions button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.section-actions button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.section-actions button.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.status {
+  margin-top: 1rem;
+  padding: 0.6rem;
+  background: rgba(0, 255, 136, 0.05);
+  border: 1px solid rgba(0, 255, 136, 0.1);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #00ff88;
+  word-break: break-all;
+}
+
+.status.error {
+  background: rgba(255, 68, 68, 0.05);
+  border-color: rgba(255, 68, 68, 0.1);
+  color: #ff4444;
+}
+
+.pre {
+  white-space: pre-wrap;
+}
