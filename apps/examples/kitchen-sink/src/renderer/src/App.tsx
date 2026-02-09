@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ComplexPayload, PayloadKind } from 'src/ipc'
 
 type SectionState = { status: string; error?: boolean }
 
@@ -11,7 +12,86 @@ export function App(): React.JSX.Element {
     setter: React.Dispatch<React.SetStateAction<SectionState>>,
     msg: string,
     error = false
-  ) => setter({ error, status: msg })
+  ): void => setter({ error, status: msg })
+
+  const handleCounterGet = async (): Promise<void> => {
+    try {
+      const n = await window.custom.counter.get()
+      setStatus(setCounterStatus, `get → ${n}`)
+    } catch (e) {
+      setStatus(setCounterStatus, String(e), true)
+    }
+  }
+
+  const handleCounterInc = async (): Promise<void> => {
+    try {
+      const n = await window.custom.counter.inc(2)
+      setStatus(setCounterStatus, `inc(2) → ${n}`)
+    } catch (e) {
+      setStatus(setCounterStatus, String(e), true)
+    }
+  }
+
+  const handleCounterPing = async (): Promise<void> => {
+    try {
+      const pong = await window.custom.counter.ping()
+      setStatus(setCounterStatus, `ping → ${pong}`)
+    } catch (e) {
+      setStatus(setCounterStatus, String(e), true)
+    }
+  }
+
+  const handleEchoComplex = async (): Promise<void> => {
+    try {
+      const input: ComplexPayload = {
+        count: 1,
+        id: 'x',
+        nested: { flag: true, kind: PayloadKind.A },
+        tags: ['a', 'b'],
+        union: 42
+      }
+      const out = await window.custom.echo.complex(input)
+      setStatus(setEchoStatus, JSON.stringify(out, null, 2))
+    } catch (e) {
+      setStatus(setEchoStatus, String(e), true)
+    }
+  }
+
+  const handleEchoSimple = async (): Promise<void> => {
+    try {
+      const out = await window.custom.echo.simple({ message: 'hello' })
+      setStatus(setEchoStatus, JSON.stringify(out))
+    } catch (e) {
+      setStatus(setEchoStatus, String(e), true)
+    }
+  }
+
+  const handleEchoOnceInvoke = async (): Promise<void> => {
+    try {
+      const out = await window.custom.echo.onceInvoke('test')
+      setStatus(setEchoStatus, out)
+    } catch (e) {
+      setStatus(setEchoStatus, String(e), true)
+    }
+  }
+
+  const handleUtilWithOrigin = async (): Promise<void> => {
+    try {
+      const out = await window.custom.util.withOrigin()
+      setStatus(setUtilStatus, JSON.stringify(out))
+    } catch (e) {
+      setStatus(setUtilStatus, String(e), true)
+    }
+  }
+
+  const handleUtilWithRawEvent = async (): Promise<void> => {
+    try {
+      const out = await window.custom.util.withRawEvent()
+      setStatus(setUtilStatus, JSON.stringify(out))
+    } catch (e) {
+      setStatus(setUtilStatus, String(e), true)
+    }
+  }
 
   return (
     <>
@@ -21,37 +101,22 @@ export function App(): React.JSX.Element {
         <h2>Counter (IpcHandle, IpcOn, CorrelationId, Sender, Window, ProcessId)</h2>
         <div className="section-actions">
           <button
-            onClick={async () => {
-              try {
-                const n = await window.ipc.counter.get()
-                setStatus(setCounterStatus, `get → ${n}`)
-              } catch (e) {
-                setStatus(setCounterStatus, String(e), true)
-              }
+            onClick={() => {
+              void handleCounterGet()
             }}
           >
             get
           </button>
           <button
-            onClick={async () => {
-              try {
-                const n = await window.ipc.counter.inc(2)
-                setStatus(setCounterStatus, `inc(2) → ${n}`)
-              } catch (e) {
-                setStatus(setCounterStatus, String(e), true)
-              }
+            onClick={() => {
+              void handleCounterInc()
             }}
           >
             inc(2)
           </button>
           <button
-            onClick={async () => {
-              try {
-                const pong = await window.ipc.counter.ping()
-                setStatus(setCounterStatus, `ping → ${pong}`)
-              } catch (e) {
-                setStatus(setCounterStatus, String(e), true)
-              }
+            onClick={() => {
+              void handleCounterPing()
             }}
           >
             ping
@@ -59,7 +124,7 @@ export function App(): React.JSX.Element {
           <button
             className="secondary"
             onClick={() => {
-              window.ipc.counter.reset()
+              window.custom.counter.reset()
               setStatus(setCounterStatus, 'reset() called')
             }}
           >
@@ -75,44 +140,22 @@ export function App(): React.JSX.Element {
         <h2>Echo (IpcHandle, IpcHandleOnce, IpcOn, IpcOnce — complex/simple types)</h2>
         <div className="section-actions">
           <button
-            onClick={async () => {
-              try {
-                const input = {
-                  count: 1,
-                  id: 'x',
-                  nested: { flag: true, kind: 'a' as const },
-                  tags: ['a', 'b'],
-                  union: 42
-                }
-                const out = await window.ipc.echo.complex(input)
-                setStatus(setEchoStatus, JSON.stringify(out, null, 2))
-              } catch (e) {
-                setStatus(setEchoStatus, String(e), true)
-              }
+            onClick={() => {
+              void handleEchoComplex()
             }}
           >
             complex
           </button>
           <button
-            onClick={async () => {
-              try {
-                const out = await window.ipc.echo.simple({ message: 'hello' })
-                setStatus(setEchoStatus, JSON.stringify(out))
-              } catch (e) {
-                setStatus(setEchoStatus, String(e), true)
-              }
+            onClick={() => {
+              void handleEchoSimple()
             }}
           >
             simple
           </button>
           <button
-            onClick={async () => {
-              try {
-                const out = await window.ipc.echo.onceInvoke('test')
-                setStatus(setEchoStatus, out)
-              } catch (e) {
-                setStatus(setEchoStatus, String(e), true)
-              }
+            onClick={() => {
+              void handleEchoOnceInvoke()
             }}
           >
             onceInvoke
@@ -120,7 +163,7 @@ export function App(): React.JSX.Element {
           <button
             className="secondary"
             onClick={() => {
-              window.ipc.echo.fireAndForget('fire')
+              window.custom.echo.fireAndForget('fire')
               setStatus(setEchoStatus, 'fireAndForget sent')
             }}
           >
@@ -129,7 +172,7 @@ export function App(): React.JSX.Element {
           <button
             className="secondary"
             onClick={() => {
-              window.ipc.echo.onceListen()
+              window.custom.echo.onceListen()
               setStatus(setEchoStatus, 'onceListen sent')
             }}
           >
@@ -145,25 +188,15 @@ export function App(): React.JSX.Element {
         <h2>Util (Origin, RawEvent)</h2>
         <div className="section-actions">
           <button
-            onClick={async () => {
-              try {
-                const out = await window.ipc.util.withOrigin()
-                setStatus(setUtilStatus, JSON.stringify(out))
-              } catch (e) {
-                setStatus(setUtilStatus, String(e), true)
-              }
+            onClick={() => {
+              void handleUtilWithOrigin()
             }}
           >
             withOrigin
           </button>
           <button
-            onClick={async () => {
-              try {
-                const out = await window.ipc.util.withRawEvent()
-                setStatus(setUtilStatus, JSON.stringify(out))
-              } catch (e) {
-                setStatus(setUtilStatus, String(e), true)
-              }
+            onClick={() => {
+              void handleUtilWithRawEvent()
             }}
           >
             withRawEvent
