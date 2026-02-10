@@ -77,7 +77,8 @@ export function electronIpcController({
       }
 
       console.log(`[${pkg.name}] Generating IPC types from ${entryPath}...`);
-      const { controllers, processedFiles } = findControllers(entryPath);
+      const { controllers, processedFiles, program } = findControllers(entryPath, undefined, state.getProgram());
+      state.setProgram(program);
 
       if (controllers.length === 0) {
         console.warn(`[${pkg.name}] No createIpcApp() call found in ${entryPath}; generated types will be empty.`);

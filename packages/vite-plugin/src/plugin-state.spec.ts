@@ -1,3 +1,5 @@
+import { Program } from "typescript";
+
 import { PluginState } from "./plugin-state.js";
 
 describe("PluginState", () => {
@@ -47,5 +49,13 @@ describe("PluginState", () => {
 
     expect(state.claimInitialGeneration()).toBe(true);
     expect(state.claimInitialGeneration()).toBe(false);
+  });
+
+  it("stores and retrieves program", () => {
+    const state = new PluginState();
+    const mockProgram = {} as unknown as Program;
+
+    state.setProgram(mockProgram);
+    expect(state.getProgram()).toBe(mockProgram);
   });
 });

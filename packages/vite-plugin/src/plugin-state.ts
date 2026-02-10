@@ -1,8 +1,11 @@
+import type { Program } from "typescript";
+
 export class PluginState {
   private controllerFiles: Set<string> | null = null;
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
   private hasGeneratedOnce = false;
   private lastHash: string | null = null;
+  private program: Program | null = null;
 
   constructor(private readonly debounceMs = 100) {}
 
@@ -12,6 +15,10 @@ export class PluginState {
       return true;
     }
     return false;
+  }
+
+  getProgram(): Program | undefined {
+    return this.program ?? undefined;
   }
 
   scheduleGenerate(callback: () => void): void {
@@ -24,6 +31,10 @@ export class PluginState {
 
   setControllerFiles(files: Set<string>): void {
     this.controllerFiles = files;
+  }
+
+  setProgram(program: Program): void {
+    this.program = program;
   }
 
   shouldRegenerate(absId: string, mainEntryPath: string, preloadEntryPath?: string): boolean {

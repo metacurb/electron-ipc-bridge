@@ -8,6 +8,7 @@ import {
   isCallExpression,
   isIdentifier,
   parseJsonConfigFileContent,
+  Program,
   readConfigFile,
   sys,
   TypeChecker,
@@ -19,6 +20,7 @@ import { ControllerMetadata } from "./types.js";
 export interface FindControllersResult {
   controllers: ControllerMetadata[];
   processedFiles: Set<string>;
+  program: Program;
 }
 
 function isCreateIpcAppCall(node: CallExpression, typeChecker: TypeChecker): boolean {
@@ -35,7 +37,11 @@ function isCreateIpcAppCall(node: CallExpression, typeChecker: TypeChecker): boo
   return target.name === "createIpcApp";
 }
 
-export const findControllers = (entryFile: string, tsConfigPath?: string): FindControllersResult => {
+export const findControllers = (
+  entryFile: string,
+  tsConfigPath?: string,
+  oldProgram?: Program,
+): FindControllersResult => {
   const searchConfig = tsConfigPath || "tsconfig.node.json";
   let configFile = findConfigFile(path.dirname(entryFile), sys.fileExists, searchConfig);
 
@@ -50,12 +56,12 @@ export const findControllers = (entryFile: string, tsConfigPath?: string): FindC
     compilerOptions = options;
   }
 
-  const program = createProgram([entryFile], compilerOptions);
+  const program = createProgram([entryFile], compilerOptions, undefined, oldProgram);
   const typeChecker = program.getTypeChecker();
   const sourceFile = program.getSourceFile(entryFile);
 
   if (!sourceFile) {
-    return { controllers: [], processedFiles: new Set() };
+    return { controllers: [], processedFiles: new Set(), program };
   }
 
   const controllers: ControllerMetadata[] = [];
@@ -71,5 +77,5 @@ export const findControllers = (entryFile: string, tsConfigPath?: string): FindC
     forEachChild(node, visit);
   });
 
-  return { controllers, processedFiles };
+  return { controllers, processedFiles, program };
 };
