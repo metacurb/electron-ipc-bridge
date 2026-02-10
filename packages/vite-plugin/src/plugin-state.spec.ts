@@ -42,14 +42,6 @@ describe("PluginState", () => {
     expect(state.updateHash("hash2")).toBe(true);
   });
 
-  it("updates metadata hash only when changed", () => {
-    const state = new PluginState();
-
-    expect(state.updateMetadataHash("meta1")).toBe(true);
-    expect(state.updateMetadataHash("meta1")).toBe(false);
-    expect(state.updateMetadataHash("meta2")).toBe(true);
-  });
-
   it("claims initial generation only once", () => {
     const state = new PluginState();
 

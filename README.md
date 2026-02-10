@@ -146,6 +146,7 @@ import { MathsController } from "./maths.controller";
 const app = createIpcApp({
   controllers: [MathsController],
   resolver: {
+    // This may differ depending on your implementation
     resolve: (Cls) => new Cls();
   },
 });
@@ -159,6 +160,8 @@ Expose the API to the renderer.
 // src/preload/index.ts
 import { setupPreload } from "@electron-ipc-controller/core/preload";
 
+// You can pass in an optional namespace here,
+// but the default is "ipc"
 setupPreload();
 ```
 

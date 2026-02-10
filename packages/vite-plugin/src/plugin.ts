@@ -7,7 +7,6 @@ import pkg from "../package.json" with { type: "json" };
 import { DEFAULT_MAIN_ENTRY, DEFAULT_PRELOAD_ENTRY } from "./constants.js";
 import { generateGlobalTypes } from "./generator/generate-global-types.js";
 import { generateRuntimeTypes } from "./generator/generate-runtime-types.js";
-import { hashControllerMetadata } from "./hash-metadata.js";
 import { normalizePath } from "./normalize-path.js";
 import { findControllers } from "./parser/find-controllers.js";
 import { PluginState } from "./plugin-state.js";
@@ -79,11 +78,10 @@ export function electronIpcController({
 
       console.log(`[${pkg.name}] Generating IPC types from ${entryPath}...`);
       const { controllers, processedFiles } = findControllers(entryPath);
+
       if (controllers.length === 0) {
         console.warn(`[${pkg.name}] No createIpcApp() call found in ${entryPath}; generated types will be empty.`);
       }
-      const metadataHash = hashControllerMetadata(controllers);
-      if (!state.updateMetadataHash(metadataHash)) return;
 
       state.setControllerFiles(new Set([...processedFiles].map(normalizePath)));
 

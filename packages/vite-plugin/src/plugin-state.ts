@@ -4,8 +4,6 @@ export class PluginState {
   private hasGeneratedOnce = false;
   private lastHash: string | null = null;
 
-  private lastMetadataHash: string | null = null;
-
   constructor(private readonly debounceMs = 100) {}
 
   claimInitialGeneration(): boolean {
@@ -40,14 +38,6 @@ export class PluginState {
       return false;
     }
     this.lastHash = hash;
-    return true;
-  }
-
-  updateMetadataHash(hash: string): boolean {
-    if (hash === this.lastMetadataHash) {
-      return false;
-    }
-    this.lastMetadataHash = hash;
     return true;
   }
 }
