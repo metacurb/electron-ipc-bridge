@@ -1,20 +1,73 @@
-![](https://img.shields.io/badge/Electron-2B2E3A?style=for-the-badge&logo=electron&logoColor=9FEAF9) ![](https://img.shields.io/badge/pnpm-yellow?style=for-the-badge&logo=pnpm&logoColor=white) ![](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-
 <p align="center">
   <img src="apps/docs/static/img/logo.png" alt="Electron IPC Controller" width="120" />
 </p>
 
-# Electron IPC Controller
+<h1 align="center">Electron IPC Controller</h1>
 
-A **type-safe, class-based** IPC framework for Electron applications. Use Controllers and decorators in the main process; the Vite plugin generates TypeScript definitions for the renderer so types stay in sync.
+<p align="center">
+  <img src="https://img.shields.io/badge/Electron-2B2E3A?style=for-the-badge&logo=electron&logoColor=9FEAF9" alt="Electron" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+</p>
 
-**Documentation:** [apps/docs](apps/docs) — run `pnpm build` in `apps/docs` to build the docs, or read the markdown in `apps/docs/docs/`.
+<p align="center">
+  A type-safe, class-based IPC framework for Electron — inspired by NestJS.<br/>
+  Define controllers in main, <strong>automatically</strong> get fully typed APIs in the renderer.
+</p>
 
-## Quick start
+<p align="center">
+  <a href="https://metacurb.github.io/electron-ipc-controller/"><strong>Documentation</strong></a> ·
+  <a href="https://metacurb.github.io/electron-ipc-controller/quickstart"><strong>Quickstart</strong></a> ·
+  <a href="https://metacurb.github.io/electron-ipc-controller/examples"><strong>Examples</strong></a>
+</p>
 
-```bash
-pnpm add @electron-ipc-controller/core reflect-metadata
-pnpm add -D @electron-ipc-controller/vite-plugin
+---
+
+## At a Glance
+
+**Controller** (main process):
+
+```ts
+import { IpcController, IpcHandle } from "@electron-ipc-controller/core";
+
+@IpcController("users")
+export class UserController {
+  @IpcHandle()
+  async getUser(id: string) {
+    return { id, name: "Alice" };
+  }
+}
 ```
 
-Import `reflect-metadata` at the top of your main entry, then use `createIpcApp({ controllers, resolver })` and `setupPreload()` in your preload script. See the [documentation](apps/docs/docs/getting-started/quickstart.md) for full setup, decorators, preload options, and more.
+**Renderer**:
+
+```ts
+const user = await window.ipc.users.getUser("123");
+console.log(user.name); // "Alice"  — fully typed, auto-completed
+```
+
+## Features
+
+- **Zero channel boilerplate** — channels are generated automatically
+- **Auto-generated renderer types** — the Vite plugin analyses your controllers and outputs `d.ts` declarations
+- **Parameter injection** — `@Sender()`, `@Window()`, `@RawEvent()`, and custom decorators
+- **No manual preload wiring** — `setupPreload()` handles everything
+- **DI-friendly** — bring your own container (TypeDI, NestJS, or a simple factory)
+
+## Install
+
+```bash
+npm install @electron-ipc-controller/core reflect-metadata
+npm install -D @electron-ipc-controller/vite-plugin
+```
+
+## Getting Started
+
+Head to the **[Quickstart guide](https://metacurb.github.io/electron-ipc-controller/quickstart)** for full setup instructions, including TypeScript config, Vite plugin setup, preload wiring, and your first controller.
+
+## Documentation
+
+Full documentation is available at **[metacurb.github.io/electron-ipc-controller](https://metacurb.github.io/electron-ipc-controller/)**.
+
+## License
+
+MIT

@@ -1,6 +1,6 @@
 # electron-vite-nest
 
-Electron + Vite + React + TypeScript example using **NestJS core** (`@nestjs/core` / `@nestjs/common`) for dependency injection with [electron-ipc-controller](https://github.com/electron-ipc-controller/electron-ipc-controller).
+Electron + Vite + React + TypeScript example using **NestJS core** (`@nestjs/core` / `@nestjs/common`) for dependency injection with [electron-ipc-controller](https://github.com/metacurb/electron-ipc-controller).
 
 Controllers are registered as Nest providers (`@Injectable()`) in `IpcModule` and resolved via `NestFactory.createApplicationContext(IpcModule)` and `context.get(Controller)`. See `src/main/ipc.module.ts`, `src/main/controllers/counter.controller.ts`, and `src/main/index.ts`.
 
