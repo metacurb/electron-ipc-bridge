@@ -1,6 +1,7 @@
 ---
 title: Troubleshooting
 sidebar_position: 2
+description: Common issues and fixes for missing types, decorator metadata, and preload setup.
 ---
 
 # Troubleshooting

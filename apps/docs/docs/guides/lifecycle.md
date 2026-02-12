@@ -1,6 +1,7 @@
 ---
 sidebar_position: 8
 title: Lifecycle & Cleanup
+description: When IPC handlers are registered and how to dispose them for dynamic windows or shutdown.
 ---
 
 # Lifecycle & Cleanup

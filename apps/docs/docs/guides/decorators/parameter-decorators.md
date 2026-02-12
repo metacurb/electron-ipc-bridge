@@ -1,6 +1,7 @@
 ---
 title: Parameter decorators
 sidebar_position: 3
+description: "Sender, Window, ProcessId, CorrelationId and other injectable context."
 ---
 
 # Parameter decorators

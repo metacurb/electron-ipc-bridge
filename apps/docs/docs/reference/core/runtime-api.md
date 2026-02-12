@@ -1,6 +1,7 @@
 ---
 title: Runtime API
 sidebar_position: 2
+description: createIpcApp, IpcAppOptions, and IpcApp disposal.
 ---
 
 # Runtime API

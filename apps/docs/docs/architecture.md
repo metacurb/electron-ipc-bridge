@@ -1,6 +1,8 @@
 ---
 title: Architecture Overview
 sidebar_position: 1
+description: Runtime and build layers of Electron IPC Bridge—ipcMain registration, controller parsing, and renderer type generation.
+keywords: [architecture, runtime, vite-plugin, createIpcApp, type generation]
 ---
 
 # Architecture Overview

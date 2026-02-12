@@ -1,6 +1,8 @@
 ---
 sidebar_position: 1
 slug: /
+description: Type-safe, class-based IPC for Electron. Controllers, decorators, and auto-generated renderer types. No manual ipcMain or preload wire-up.
+keywords: [electron, ipc, typescript, type-safe, decorators, ipc-main, preload]
 ---
 
 # Introduction

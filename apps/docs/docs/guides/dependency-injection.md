@@ -1,6 +1,7 @@
 ---
 sidebar_position: 7
 title: Dependency Injection
+description: Integrate a DI container or custom resolver with createIpcApp for controller and service wiring.
 ---
 
 import Tabs from '@theme/Tabs';

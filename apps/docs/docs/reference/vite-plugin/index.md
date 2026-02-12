@@ -1,6 +1,7 @@
 ---
 title: Vite Plugin Package
 sidebar_position: 1
+description: "Vite plugin options and type generation behaviour for the vite-plugin package."
 ---
 
 # `@electron-ipc-bridge/vite-plugin`

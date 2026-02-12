@@ -1,6 +1,8 @@
 ---
 sidebar_position: 2
 title: Quickstart
+description: Install the core package and Vite plugin, configure TypeScript and Vite, then create your first IPC controller and call it from the renderer.
+keywords: [install, setup, vite, reflect-metadata, first controller]
 ---
 
 # Quickstart

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://metacurb.github.io/electron-ipc-bridge/sitemap.xml

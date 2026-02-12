@@ -1,6 +1,7 @@
 ---
 title: Class decorators
 sidebar_position: 1
+description: "IpcController decorator and how to mark classes as IPC controllers and set namespaces."
 ---
 
 # Class decorators

@@ -1,6 +1,7 @@
 ---
 title: Generation Behaviour
 sidebar_position: 3
+description: What the plugin analyses, what it generates, and regeneration rules.
 ---
 
 # Generation Behaviour

@@ -1,6 +1,7 @@
 ---
 title: Decorators Reference
 sidebar_position: 3
+description: Complete list of class, method, and parameter decorators with signatures.
 ---
 
 # Decorators Reference

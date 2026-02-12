@@ -1,6 +1,7 @@
 ---
 sidebar_position: 5
 title: Preload Integration
+description: Use the managed preload script or a custom preload with setupPreload. Works with contextIsolation and sandbox.
 ---
 
 # Preload Integration

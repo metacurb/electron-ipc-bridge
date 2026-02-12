@@ -1,6 +1,7 @@
 ---
 title: Advanced Helpers
 sidebar_position: 5
+description: isIpcController and getCorrelationId for framework and DI integrations.
 ---
 
 # Advanced Helpers

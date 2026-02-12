@@ -1,6 +1,7 @@
 ---
 title: Plugin Options
 sidebar_position: 2
+description: electronIpcController plugin options—main, preload, and type output paths.
 ---
 
 # Plugin Options

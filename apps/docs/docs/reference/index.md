@@ -1,6 +1,7 @@
 ---
 title: Reference
 sidebar_position: 1
+description: API and configuration reference for the core package and Vite plugin.
 ---
 
 # Reference

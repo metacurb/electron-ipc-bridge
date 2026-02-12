@@ -1,6 +1,7 @@
 ---
 title: Method decorators
 sidebar_position: 2
+description: "IpcHandle, IpcHandleOnce, IpcOn, IpcOnce and how they map to ipcMain."
 ---
 
 # Method decorators

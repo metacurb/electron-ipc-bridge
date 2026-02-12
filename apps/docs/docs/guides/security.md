@@ -1,6 +1,7 @@
 ---
 sidebar_position: 9
 title: Security & Sandbox Compatibility
+description: How Electron IPC Bridge works with contextIsolation and sandbox for secure renderer–main communication.
 ---
 
 # Security & Sandbox Compatibility

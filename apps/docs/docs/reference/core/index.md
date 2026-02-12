@@ -1,6 +1,7 @@
 ---
 title: Core Package
 sidebar_position: 1
+description: "Runtime API, decorators, preload API, and advanced helpers in the core package."
 ---
 
 # `@electron-ipc-bridge/core`

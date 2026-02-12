@@ -1,6 +1,7 @@
 ---
 title: Migrate from Manual IPC
 sidebar_position: 1
+description: Step-by-step migration from manual ipcMain and preload wiring to controller-based IPC with generated types.
 ---
 
 # Migrate from Manual IPC

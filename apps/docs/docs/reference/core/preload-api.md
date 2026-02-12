@@ -1,6 +1,7 @@
 ---
 title: Preload API
 sidebar_position: 4
+description: setupPreload, PreloadApi types, and the managed preload entry.
 ---
 
 # Preload API

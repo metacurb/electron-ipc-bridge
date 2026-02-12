@@ -1,6 +1,7 @@
 ---
 title: Channels & Interoperability
 sidebar_position: 6
+description: How IPC channel names are generated and how to interoperate with manual IPC or other tools.
 ---
 
 # Channels & Interoperability

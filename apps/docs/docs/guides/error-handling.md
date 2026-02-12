@@ -1,6 +1,7 @@
 ---
 title: Error Handling
 sidebar_position: 6
+description: How errors and promise rejections in controller methods are propagated to the renderer.
 ---
 
 # Error Handling
