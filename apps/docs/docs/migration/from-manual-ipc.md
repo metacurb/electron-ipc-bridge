@@ -6,7 +6,7 @@ description: Step-by-step migration from manual ipcMain and preload wiring to co
 
 # Migrate from Manual IPC
 
-This guide shows how to move from manual `ipcMain` + custom preload wiring to controller-based IPC with generated renderer types.
+This guide shows how to move from manual [ipcMain](https://www.electronjs.org/docs/latest/api/ipc-main) + custom preload wiring to controller-based IPC with generated renderer types.
 
 ## Migration goals
 
@@ -59,6 +59,8 @@ contextBridge.exposeInMainWorld("api", {
 });
 ```
 
+(Using Electron's [contextBridge](https://www.electronjs.org/docs/latest/api/context-bridge) and [ipcRenderer](https://www.electronjs.org/docs/latest/api/ipc-renderer).)
+
 After:
 
 ```ts
@@ -83,9 +85,9 @@ const profile = await window.ipc.users.getProfile(userId);
 
 ## Step 5: Validate behaviour and remove legacy code
 
-- Remove old `ipcMain.handle`/`ipcMain.on` registrations for migrated endpoints
+- Remove old [`ipcMain.handle`](https://www.electronjs.org/docs/latest/api/ipc-main#ipcmainhandlechannel-listener)/[`ipcMain.on`](https://www.electronjs.org/docs/latest/api/ipc-main#ipcmainonchannel-listener) registrations for migrated endpoints
 - Remove redundant preload bridge methods that are now generated
-- Keep `reflect-metadata` import at main entrypoint
+- Keep [reflect-metadata](https://www.npmjs.com/package/reflect-metadata) import at main entrypoint
 - Confirm renderer compiles against generated API types
 
 ## Common migration pitfalls

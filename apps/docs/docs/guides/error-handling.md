@@ -32,7 +32,7 @@ try {
 ```
 
 :::warning
-Standard `Error` objects lose their custom properties (like `code` or `status`) when passing through Electron's IPC serialization. Only the `message` property is reliably preserved by default.
+Standard `Error` objects lose their custom properties (like `code` or `status`) when passing through [Electron's IPC serialization](https://www.electronjs.org/docs/latest/api/ipc-main#description). Only the `message` property is reliably preserved by default.
 :::
 
 ## Structured Errors

@@ -10,7 +10,7 @@ While `@electron-ipc-bridge` provides several built-in decorators like `@Sender(
 
 ## `createParamDecorator`
 
-The `createParamDecorator` utility allows you to define a decorator that extracts data from the `IpcMainInvokeEvent` or other sources at runtime.
+The `createParamDecorator` utility allows you to define a decorator that extracts data from the [`IpcMainInvokeEvent`](https://www.electronjs.org/docs/latest/api/structures/ipc-main-invoke-event) or other sources at runtime.
 
 ### Basic Example
 

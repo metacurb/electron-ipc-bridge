@@ -17,7 +17,7 @@ Common issues and fast fixes.
 
 ### Checks
 
-- Vite config includes `electronIpcController(...)`
+- [Vite](https://vitejs.dev/) config includes `electronIpcController(...)`
 - `main` option points to the correct file containing `createIpcApp(...)`
 - Controller classes are discoverable from that entrypoint
 
@@ -35,9 +35,9 @@ Common issues and fast fixes.
 
 ### Checks
 
-- Preload script is actually attached to `BrowserWindow`
+- Preload script is actually attached to [`BrowserWindow`](https://www.electronjs.org/docs/latest/api/browser-window#class-browserwindow-extends-basewindow)
 - `setupPreload()` runs successfully
-- `contextIsolation` is enabled and bridge exposure is valid
+- [contextIsolation](https://www.electronjs.org/docs/latest/tutorial/context-isolation) is enabled and bridge exposure is valid
 
 ### Fix
 
@@ -100,11 +100,11 @@ Common issues and fast fixes.
 
 - TypeScript config has `experimentalDecorators: true`
 - `emitDecoratorMetadata: true` is enabled
-- `reflect-metadata` is imported before decorators execute
+- [reflect-metadata](https://www.npmjs.com/package/reflect-metadata) is imported before decorators execute
 
 ### Fix
 
-- Import `reflect-metadata` at main startup entry (top of file)
+- Import `reflect-metadata` at main startup entry (top of file). See [reflect-metadata on npm](https://www.npmjs.com/package/reflect-metadata).
 
 ## Contract/preload handshake issues
 

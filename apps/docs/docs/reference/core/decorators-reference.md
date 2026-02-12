@@ -18,12 +18,12 @@ description: Complete list of class, method, and parameter decorators with signa
 
 ### `@IpcHandle(name?: string)`
 
-- Request/response handler (`ipcMain.handle`)
-- Renderer call shape is async (`Promise<TReturn>`)
+- Request/response handler ([`ipcMain.handle`](https://www.electronjs.org/docs/latest/api/ipc-main#ipcmainhandlechannel-listener))
+- Renderer call shape is async ([`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)-based)
 
 ### `@IpcOn(name?: string)`
 
-- Fire-and-forget listener (`ipcMain.on`)
+- Fire-and-forget listener ([`ipcMain.on`](https://www.electronjs.org/docs/latest/api/ipc-main#ipcmainonchannel-listener))
 - Renderer call shape returns `void`
 
 ### `@IpcHandleOnce(name?: string)` and `@IpcOnce(name?: string)`
@@ -39,11 +39,11 @@ description: Complete list of class, method, and parameter decorators with signa
 
 ### `@Sender()`
 
-- Injects `event.sender` (`WebContents`)
+- Injects `event.sender` ([`WebContents`](https://www.electronjs.org/docs/latest/api/web-contents#class-webcontents))
 
 ### `@Window()`
 
-- Injects `BrowserWindow.fromWebContents(event.sender)`
+- Injects [BrowserWindow.fromWebContents](https://www.electronjs.org/docs/latest/api/browser-window#browserwindowfromwebcontentswebcontents)(event.sender)
 - **Nullable**: `null` if no matching window exists (e.g. sender is a webview or frame without a window)
 
 ### `@ProcessId()`
@@ -52,11 +52,11 @@ description: Complete list of class, method, and parameter decorators with signa
 
 ### `@RawEvent()`
 
-- Injects raw Electron event (`IpcMainEvent | IpcMainInvokeEvent`)
+- Injects raw Electron event ([`IpcMainEvent`](https://www.electronjs.org/docs/latest/api/structures/ipc-main-event) | [`IpcMainInvokeEvent`](https://www.electronjs.org/docs/latest/api/structures/ipc-main-invoke-event))
 
 ### `@Origin()`
 
-- Injects sender frame (`WebFrameMain`)
+- Injects sender frame ([`WebFrameMain`](https://www.electronjs.org/docs/latest/api/web-frame-main))
 
 ### `@CorrelationId()`
 

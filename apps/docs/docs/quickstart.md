@@ -14,9 +14,11 @@ npm install @electron-ipc-bridge/core reflect-metadata
 npm install -D @electron-ipc-bridge/vite-plugin
 ```
 
+The [reflect-metadata](https://www.npmjs.com/package/reflect-metadata) package is required for decorator metadata at runtime.
+
 ## 2. Configure TypeScript
 
-Ensure your tsconfig.json has the following options enabled to support decorators:
+Ensure your [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) has the following options enabled to support [decorators](https://www.typescriptlang.org/docs/handbook/decorators.html):
 
 ```json
 {
@@ -28,12 +30,12 @@ Ensure your tsconfig.json has the following options enabled to support decorator
 ```
 
 :::note
-You must import `reflect-metadata` at the very top of your application entry point.
+You must import `reflect-metadata` at the very top of your application entry point. See [reflect-metadata](https://www.npmjs.com/package/reflect-metadata) on npm.
 :::
 
 ## 3. Configure Vite (for Type Generation)
 
-This is optional, but without it you lose type generation. Add the plugin to your `vite.config.ts`.
+This is optional, but without it you lose type generation. Add the plugin to your [Vite](https://vitejs.dev/) config (`vite.config.ts`).
 
 ```typescript title="vite.config.ts"
 import { electronIpcController } from "@electron-ipc-bridge/vite-plugin";

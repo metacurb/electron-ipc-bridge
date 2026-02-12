@@ -6,7 +6,7 @@ description: "Vite plugin options and type generation behaviour for the vite-plu
 
 # `@electron-ipc-bridge/vite-plugin`
 
-The Vite plugin performs build-time analysis and type generation for renderer-safe IPC usage.
+The [Vite](https://vitejs.dev/) plugin performs build-time analysis and type generation for renderer-safe IPC usage.
 
 ## Includes
 

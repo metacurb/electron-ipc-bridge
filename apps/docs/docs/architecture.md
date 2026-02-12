@@ -10,7 +10,7 @@ keywords: [architecture, runtime, vite-plugin, createIpcApp, type generation]
 This library has two cooperating layers:
 
 1. **Runtime layer (`@electron-ipc-bridge/core`)**
-   - Registers controller handlers on Electron `ipcMain`
+   - Registers controller handlers on Electron [`ipcMain`](https://www.electronjs.org/docs/latest/api/ipc-main)
    - Injects event-derived parameters (`@Sender()`, `@Window()`, `@RawEvent()`, etc.)
    - Optionally wraps handler execution in correlation context
 

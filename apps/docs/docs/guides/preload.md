@@ -6,7 +6,7 @@ description: Use the managed preload script or a custom preload with setupPreloa
 
 # Preload Integration
 
-Electron IPC Bridge supports two preload integration strategies, depending on how much control you need. Both options work with contextIsolation: true and sandbox mode.
+Electron IPC Bridge supports two preload integration strategies, depending on how much control you need. Both options work with [contextIsolation](https://www.electronjs.org/docs/latest/tutorial/context-isolation): true and [sandbox](https://www.electronjs.org/docs/latest/tutorial/sandbox) mode.
 
 ## Option 1: Fully Managed Preload (Zero Config)
 
@@ -14,6 +14,8 @@ For simple setups, the library provides a ready-made preload script that exposes
 
 - Requires no custom preload code
 - Exposes only the generated IPC API
+
+Use Electron's [`BrowserWindow`](https://www.electronjs.org/docs/latest/api/browser-window#class-browserwindow-extends-basewindow) and point `webPreferences.preload` to the built preload:
 
 ```typescript title="src/main/index.ts"
 new BrowserWindow({
@@ -47,6 +49,8 @@ try {
   console.error(error);
 }
 ```
+
+[contextBridge](https://www.electronjs.org/docs/latest/api/context-bridge) exposes APIs to the renderer safely.
 
 ## Customising the API Namespace
 

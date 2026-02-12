@@ -6,7 +6,7 @@ description: How IPC channel names are generated and how to interoperate with ma
 
 # Channels & Interoperability
 
-Electron IPC Bridge abstracts away the underlying Electron IPC channel names, but understanding how they are generated is useful for debugging, auditing, or manual interoperability.
+Electron IPC Bridge abstracts away the underlying [Electron IPC](https://www.electronjs.org/docs/latest/api/ipc-main) channel names, but understanding how they are generated is useful for debugging, auditing, or manual interoperability.
 
 ## Channel Naming Convention
 
@@ -33,7 +33,7 @@ Method names are automatically converted from `camelCase` to `snake_case` to fol
 
 ## Debugging
 
-Because the channels are standard Electron IPC channels, you can use standard tools to spectate or debug them.
+Because the channels are standard [Electron IPC](https://www.electronjs.org/docs/latest/api/ipc-main) channels, you can use standard tools to spectate or debug them.
 
 - **[electron-debug](https://github.com/sindresorhus/electron-debug)**: Can log IPC messages to the console.
 - **DevTools**: You can monitor network/IPC traffic in some DevTools extensions or by simply logging in the main process.

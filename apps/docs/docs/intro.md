@@ -7,16 +7,16 @@ keywords: [electron, ipc, typescript, type-safe, decorators, ipc-main, preload]
 
 # Introduction
 
-IPC Electron Controller is a **type-safe, class-based** IPC framework for Electron applications.
+IPC Electron Controller is a **type-safe, class-based** IPC framework for [Electron](https://www.electronjs.org/) applications.
 
-Inspired by NestJS, this library allows you to structure your Electron Main Process logic using **Controllers** and **Decorators**. It includes a Vite plugin that automatically generates TypeScript definitions for your Renderer process, ensuring your renderer and main process types are always in sync without manual duplication.
+Inspired by [NestJS](https://nestjs.com/), this library allows you to structure your Electron Main Process logic using **Controllers** and **Decorators**. It includes a [Vite](https://vitejs.dev/) plugin that automatically generates [TypeScript](https://www.typescriptlang.org/) definitions for your Renderer process, ensuring your renderer and main process types are always in sync without manual duplication.
 
 - Channels become an implementation detail. They're dynamically generated when the app is created, and automatically passed to the preload script.
-- The `IpcMainEvent`/`IpcMainInvokeEvent` is abstracted away by default, but easily accessible with the `@RawEvent()` decorator
+- The [`IpcMainEvent`](https://www.electronjs.org/docs/latest/api/structures/ipc-main-event)/[`IpcMainInvokeEvent`](https://www.electronjs.org/docs/latest/api/structures/ipc-main-invoke-event) is abstracted away by default, but easily accessible with the `@RawEvent()` decorator
 - Types are auto-generated for the renderer process, meaning you don't need to manually create shared DTOs
-- You never need to touch `ipcMain.handle(...)` or `ipcRenderer.invoke(...)`
+- You never need to touch [`ipcMain.handle`](https://www.electronjs.org/docs/latest/api/ipc-main#ipcmainhandlechannel-listener)(...) or [`ipcRenderer.invoke`](https://www.electronjs.org/docs/latest/api/ipc-renderer#ipcrendererinvokechannel-args)(...)
 - There's no need for manual preload wire-up
-- Easy mapping from a class-based structure into Electron's IPC mechanisms
+- Easy mapping from a class-based structure into [Electron's IPC](https://www.electronjs.org/docs/latest/api/ipc-main) mechanisms
 
 ## At a Glance
 
@@ -76,8 +76,8 @@ graph LR
 This library consists of two main parts working in tandem:
 
 1. **Runtime (`@electron-ipc-bridge/core`):**
-   - Uses TypeScript decorators to register class methods as `ipcMain` handlers.
-   - Handles parameter injection (e.g., getting the `BrowserWindow` or `WebContents` directly in your method).
+   - Uses TypeScript decorators to register class methods as [`ipcMain`](https://www.electronjs.org/docs/latest/api/ipc-main) handlers.
+   - Handles parameter injection (e.g., getting the [`BrowserWindow`](https://www.electronjs.org/docs/latest/api/browser-window#class-browserwindow-extends-basewindow) or [`WebContents`](https://www.electronjs.org/docs/latest/api/web-contents#class-webcontents) directly in your method).
    - Manages the `preload` script to expose a type-safe API bridge.
 
 2. **Build-time (`@electron-ipc-bridge/vite-plugin`):**
