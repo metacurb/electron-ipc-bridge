@@ -67,9 +67,13 @@ jobs:
   publish-npm:
     name: ${{ inputs.dry_run && 'Publish to NPM (dry-run)' || 'Publish to NPM' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # commit and push version bump
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -85,6 +89,15 @@ jobs:
         run: node scripts/set-version.js
         env:
           VERSION: ${{ inputs.version }}
+
+      - name: Commit and push version bump
+        if: ${{ !inputs.dry_run }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "chore: bump version to ${{ inputs.version }}"
+          git push
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
