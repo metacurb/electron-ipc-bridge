@@ -68,7 +68,8 @@ jobs:
     name: ${{ inputs.dry_run && 'Publish to NPM (dry-run)' || 'Publish to NPM' }}
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # commit and push version bump
+      contents: write
+      id-token: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -107,10 +108,6 @@ jobs:
 
       - name: Publish core
         run: pnpm --filter @electron-ipc-bridge/core publish --access public --provenance --no-git-checks ${{ inputs.dry_run && '--dry-run' || '' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish vite-plugin
         run: pnpm --filter @electron-ipc-bridge/vite-plugin publish --access public --provenance --no-git-checks ${{ inputs.dry_run && '--dry-run' || '' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
