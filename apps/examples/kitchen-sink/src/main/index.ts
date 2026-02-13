@@ -18,7 +18,10 @@ function createWindow(): void {
     width: 900,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js')
+      contextIsolation: true,
+      nodeIntegration: false,
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: true
     }
   })
 

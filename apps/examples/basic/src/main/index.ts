@@ -10,7 +10,10 @@ function createWindow(): void {
   mainWindow = new BrowserWindow({
     height: 800,
     webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
       preload: require.resolve("@electron-ipc-bridge/core/preload.js"),
+      sandbox: true,
     },
     width: 800,
   });

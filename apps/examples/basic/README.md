@@ -78,6 +78,9 @@ This example uses the pre-bundled preload script provided by the library, which 
 ```ts
 // src/main/index.ts
 webPreferences: {
+  contextIsolation: true,
+  nodeIntegration: false,
+  sandbox: true,
   preload: require.resolve("electron-ipc-bridge/preload.js"),
 },
 ```

@@ -20,7 +20,10 @@ Use Electron's [`BrowserWindow`](https://www.electronjs.org/docs/latest/api/brow
 ```typescript title="src/main/index.ts"
 new BrowserWindow({
   webPreferences: {
+    contextIsolation: true,
+    nodeIntegration: false,
     preload: require.resolve("@electron-ipc-bridge/core/preload.js"),
+    sandbox: true,
   },
 });
 ```
