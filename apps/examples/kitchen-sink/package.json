@@ -1,6 +1,6 @@
 {
   "name": "kitchen-sink",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Kitchen sink example – all decorators and config options",
   "main": "./out/main/index.js",
   "scripts": {
