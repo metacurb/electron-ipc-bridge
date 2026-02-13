@@ -10,13 +10,15 @@ import eslintConfigPrettier from "eslint-config-prettier";
 export default defineConfig([
   {
     ignores: [
-      "eslint.config.mjs",
-      "**/dist/**",
-      "**/out/**",
-      "**/node_modules/**",
-      "**/fixtures/**",
-      "**/build/**",
       "**/.docusaurus/**",
+      "**/build/**",
+      "scripts/**",
+      "**/coverage/**",
+      "**/dist/**",
+      "**/fixtures/**",
+      "**/node_modules/**",
+      "**/out/**",
+      "eslint.config.mjs",
     ],
   },
   eslintConfigPrettier,
