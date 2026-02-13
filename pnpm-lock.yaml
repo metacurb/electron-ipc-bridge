@@ -359,8 +359,8 @@ importers:
   apps/examples/kitchen-sink:
     dependencies:
       '@electron-ipc-bridge/core':
-        specifier: file:..\..\..\electron-ipc-bridge-core-0.1.0.tgz
-        version: file:electron-ipc-bridge-core-0.1.0.tgz(electron@40.3.0)(reflect-metadata@0.2.2)
+        specifier: workspace:*
+        version: link:../../../packages/core
       '@electron-toolkit/preload':
         specifier: ^3.0.2
         version: 3.0.2(electron@40.3.0)
@@ -372,8 +372,8 @@ importers:
         version: 0.2.2
     devDependencies:
       '@electron-ipc-bridge/vite-plugin':
-        specifier: file:..\..\..\electron-ipc-bridge-vite-plugin-0.1.0.tgz
-        version: file:electron-ipc-bridge-vite-plugin-0.1.0.tgz(typescript@5.9.3)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2))
+        specifier: workspace:*
+        version: link:../../../packages/vite-plugin
       '@electron-toolkit/eslint-config-prettier':
         specifier: ^3.0.0
         version: 3.0.0(@types/eslint@9.6.1)(eslint@9.39.2(jiti@2.6.1))(prettier@3.8.1)
@@ -1794,20 +1794,6 @@ packages:
   '@docusaurus/utils@3.9.2':
     resolution: {integrity: sha512-lBSBiRruFurFKXr5Hbsl2thmGweAPmddhF3jb99U4EMDA5L+e5Y1rAkOS07Nvrup7HUMBDrCV45meaxZnt28nQ==}
     engines: {node: '>=20.0'}
-
-  '@electron-ipc-bridge/core@file:electron-ipc-bridge-core-0.1.0.tgz':
-    resolution: {integrity: sha512-9Z7blVpiJoX6oVu7JSQ1sEdj/Vv2L1YN9yvoLGsNKHI+J9/DlosUjYhDK5u3kde/jHHTiMz5DNhYImGHmrLQ/w==, tarball: file:electron-ipc-bridge-core-0.1.0.tgz}
-    version: 0.1.0
-    peerDependencies:
-      electron: '>=28.0.0'
-      reflect-metadata: ^0.2.2
-
-  '@electron-ipc-bridge/vite-plugin@file:electron-ipc-bridge-vite-plugin-0.1.0.tgz':
-    resolution: {integrity: sha512-40ExOF6wBm5kimxJ+y2xI3XCv5rGXrNeckr1RtR3IF+dB9gDK//xB4eDHxnYj569t6UHOoiPN8GQU8TqMeu5LQ==, tarball: file:electron-ipc-bridge-vite-plugin-0.1.0.tgz}
-    version: 0.1.0
-    peerDependencies:
-      typescript: ^5.0.0
-      vite: ^5.0.0 || ^6.0.0 || ^7.0.0
 
   '@electron-toolkit/eslint-config-prettier@3.0.0':
     resolution: {integrity: sha512-YapmIOVkbYdHLuTa+ad1SAVtcqYL9A/SJsc7cxQokmhcwAwonGevNom37jBf9slXegcZ/Slh01I/JARG1yhNFw==}
@@ -11285,16 +11271,6 @@ snapshots:
       - supports-color
       - uglify-js
       - webpack-cli
-
-  '@electron-ipc-bridge/core@file:electron-ipc-bridge-core-0.1.0.tgz(electron@40.3.0)(reflect-metadata@0.2.2)':
-    dependencies:
-      electron: 40.3.0
-      reflect-metadata: 0.2.2
-
-  '@electron-ipc-bridge/vite-plugin@file:electron-ipc-bridge-vite-plugin-0.1.0.tgz(typescript@5.9.3)(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2))':
-    dependencies:
-      typescript: 5.9.3
-      vite: 7.3.1(@types/node@25.2.3)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)
 
   '@electron-toolkit/eslint-config-prettier@3.0.0(@types/eslint@9.6.1)(eslint@9.39.2(jiti@2.6.1))(prettier@3.8.1)':
     dependencies:
