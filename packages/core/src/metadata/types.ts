@@ -16,7 +16,13 @@ export interface IpcHandlerMetadata {
   type: IpcHandlerType;
 }
 
+/**
+ * Context object passed to parameter decorator resolver functions.
+ *
+ * @see {@link createParamDecorator}
+ */
 export interface ParameterInjectionContext {
+  /** The fully-qualified IPC channel name for the current invocation. */
   channel: string;
 }
 
@@ -33,6 +39,13 @@ export interface IpcApplicationMetadata {
   disposers: Disposer[];
 }
 
+/**
+ * A generic constructor type representing a class that can be instantiated.
+ *
+ * Used to reference controller classes throughout the library.
+ *
+ * @typeParam T - The instance type created by the constructor.
+ */
 export interface Constructor<T = unknown> {
   new (...args: unknown[]): T;
   prototype: T;
