@@ -60,34 +60,30 @@ describe("collectDependencies", () => {
     expect(processedFiles.size).toBe(0);
   });
 
-  it("should handle circular references gracefully (though current implementation relies on simple recursion, structure is a tree/DAG)", () => {
-    // The current implementation is simple recursion.
-    // If we have circular references in TypeDefinition structure, it would stack overflow.
-    // However, `extract-type` handles cycle detection during extraction so the resulting TypeDefinition[] shouldn't have infinite depth?
-    // Actually, `TypeDefinition` structure is recursive.
-    // `collectDependencies` visits recursively.
-    // If TypeA references TypeB and TypeB references TypeA in the definitions list?
-    // Let's check `extract-type` logic. It uses `seen` set on type names.
-    // So it produces a finite tree (DAG effectively).
-    // So recursion is safe.
-    // Let's just verify deep nesting works.
+  it("should handle circular references gracefully", () => {
     const processedFiles = new Set<string>();
 
-    const deepType: TypeDefinition = {
+    const typeA: TypeDefinition = {
       definition: "",
-      name: "Deep",
+      name: "TypeA",
       referencedTypes: [],
-      sourceFile: "/src/deep.ts",
+      sourceFile: "/src/type-a.ts",
     };
 
-    const rootType: TypeDefinition = {
+    const typeB: TypeDefinition = {
       definition: "",
-      name: "Root",
-      referencedTypes: [deepType],
-      sourceFile: "/src/root.ts",
+      name: "TypeB",
+      referencedTypes: [typeA],
+      sourceFile: "/src/type-b.ts",
     };
 
-    collectDependencies([rootType], processedFiles);
+    // Create cycle: A -> B -> A
+    typeA.referencedTypes.push(typeB);
+
+    collectDependencies([typeA], processedFiles);
+
     expect(processedFiles.size).toBe(2);
+    expect(processedFiles.has("/src/type-a.ts")).toBe(true);
+    expect(processedFiles.has("/src/type-b.ts")).toBe(true);
   });
 });
