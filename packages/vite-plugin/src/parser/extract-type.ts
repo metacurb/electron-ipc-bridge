@@ -12,38 +12,10 @@ import {
   TypeChecker,
 } from "typescript";
 
+import { BUILTIN_TYPE_NAMES } from "./constants.js";
 import { TypeDefinition } from "./types.js";
 
 const printer = createPrinter({ removeComments: true });
-
-const BUILTIN_TYPE_NAMES = new Set([
-  "Promise",
-  "Array",
-  "Map",
-  "Set",
-  "WeakMap",
-  "WeakSet",
-  "Date",
-  "RegExp",
-  "Function",
-  "Symbol",
-  "Error",
-  "Record",
-  "Partial",
-  "Required",
-  "Readonly",
-  "Pick",
-  "Omit",
-  "Exclude",
-  "Extract",
-  "NonNullable",
-  "ReturnType",
-  "Parameters",
-  "InstanceType",
-  "ConstructorParameters",
-  "__type",
-  "undefined",
-]);
 
 export const collectTypeDefinitions = (
   node: Node,
