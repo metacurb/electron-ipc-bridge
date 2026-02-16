@@ -59,10 +59,13 @@ describe("electronIpcBridge", () => {
     }
 
     // Should call createLogger
-    expect(createLogger).toHaveBeenCalledWith("info", expect.objectContaining({
-      allowClearScreen: true,
-      prefix: expect.stringContaining("electron-ipc-bridge"),
-    }));
+    expect(createLogger).toHaveBeenCalledWith(
+      "info",
+      expect.objectContaining({
+        allowClearScreen: true,
+        prefix: expect.stringContaining("electron-ipc-bridge"),
+      }),
+    );
 
     // Should use the logger returned by createLogger (which is mockViteLogger)
     expect(mockViteLogger.warn).toHaveBeenCalledWith(expect.stringContaining("Main entry not found at"));
