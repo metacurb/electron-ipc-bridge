@@ -219,4 +219,17 @@ describe("assembleIpc", () => {
       "Failed to resolve controller 'Controller': Resolution failed",
     );
   });
+
+  test("should rethrow with context if resolver fails with a non-Error object", () => {
+    class Controller {}
+    const errorMessage = "Resolution failed string";
+    (mockResolver.resolve as jest.Mock).mockImplementation(() => {
+      // eslint-disable-next-line @typescript-eslint/no-throw-literal
+      throw errorMessage;
+    });
+
+    expect(() => assembleIpc([Controller], { resolver: mockResolver })).toThrow(
+      `Failed to resolve controller 'Controller': ${errorMessage}`,
+    );
+  });
 });
