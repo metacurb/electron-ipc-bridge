@@ -2,12 +2,13 @@ import { registerHandler } from "../core/register-handler";
 import { getControllerMetadata } from "../metadata/get-controller-metadata";
 import { Constructor, Disposer } from "../metadata/types";
 
-import { ControllerResolver } from "./types";
+import { ControllerResolver, IpcInterceptor } from "./types";
 
 export const assembleIpc = (
   controllers: Constructor[],
   options: {
     correlation?: boolean;
+    interceptor?: IpcInterceptor;
     resolver: ControllerResolver;
   },
 ): Disposer[] => {
@@ -31,6 +32,7 @@ export const assembleIpc = (
     for (const handler of meta.handlers.values()) {
       const dispose = registerHandler(handler, instance, {
         correlation: options.correlation,
+        interceptor: options.interceptor,
       });
       if (dispose) disposers.push(dispose);
     }

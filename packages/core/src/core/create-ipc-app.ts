@@ -3,11 +3,12 @@ import { Constructor, Disposer } from "../metadata/types";
 
 import { assembleIpc } from "./assemble-ipc";
 import { registerContractHandler } from "./register-contract-handler";
-import { ControllerResolver } from "./types";
+import { ControllerResolver, IpcInterceptor } from "./types";
 
 export interface IpcAppOptions {
   controllers: Constructor[];
   correlation?: boolean;
+  interceptor?: IpcInterceptor;
   resolver: ControllerResolver;
 }
 
@@ -15,7 +16,7 @@ export interface IpcApp {
   dispose(): void;
 }
 
-export const createIpcApp = ({ controllers, correlation, resolver }: IpcAppOptions): IpcApp => {
+export const createIpcApp = ({ controllers, correlation, interceptor, resolver }: IpcAppOptions): IpcApp => {
   if (!Array.isArray(controllers)) {
     throw new Error("controllers must be an array");
   }
@@ -38,7 +39,7 @@ export const createIpcApp = ({ controllers, correlation, resolver }: IpcAppOptio
 
   const disposers: Disposer[] = [];
 
-  disposers.push(...assembleIpc(controllers, { correlation, resolver }));
+  disposers.push(...assembleIpc(controllers, { correlation, interceptor, resolver }));
   disposers.push(registerContractHandler(controllers));
 
   return {

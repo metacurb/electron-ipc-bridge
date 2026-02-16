@@ -48,6 +48,22 @@ describe("createIpcApp", () => {
     expect(mockRegisterContractHandler).toHaveBeenCalledWith(controllers);
   });
 
+  test("should pass interceptor to assembleIpc", () => {
+    const interceptor = { intercept: jest.fn() };
+    createIpcApp({
+      controllers,
+      correlation: false,
+      interceptor,
+      resolver: mockResolver,
+    });
+
+    expect(mockAssembleIpc).toHaveBeenCalledWith(controllers, {
+      correlation: false,
+      interceptor,
+      resolver: mockResolver,
+    });
+  });
+
   test("should return an object with a dispose method that calls all disposers", () => {
     const disposer1 = jest.fn();
     const disposer2 = jest.fn();
