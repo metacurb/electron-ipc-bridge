@@ -1,5 +1,5 @@
 import path from "path";
-import { createLogger, type Logger,Plugin } from "vite";
+import { createLogger, type Logger, Plugin } from "vite";
 
 import pkg from "../package.json" with { type: "json" };
 
@@ -51,10 +51,10 @@ export function electronIpcBridge({
     configResolved(config) {
       root = config.root;
       logger = createLogger(config.logLevel, {
-          allowClearScreen: config.clearScreen,
-          customLogger: config.customLogger,
-          prefix: `[${pkg.name}]`,
-        });
+        allowClearScreen: config.clearScreen,
+        customLogger: config.customLogger,
+        prefix: `[${pkg.name}]`,
+      });
     },
     configureServer(server) {
       const preloadPath = path.resolve(root, preload);

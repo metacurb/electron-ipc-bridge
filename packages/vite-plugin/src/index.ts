@@ -1,1 +1,1 @@
-export { electronIpcBridge, type electronIpcBridgePlugin, type PluginOptions } from "./plugin.js";
+export { electronIpcBridge, type PluginOptions } from "./plugin.js";
