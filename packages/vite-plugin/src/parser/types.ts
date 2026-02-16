@@ -6,6 +6,7 @@ export interface ControllerMetadata {
   methods: MethodMetadata[];
   namespace: string;
   referencedTypes: TypeDefinition[];
+  requiredReferenceTypes?: string[];
 }
 export interface TypeDefinition {
   definition: string;
@@ -19,6 +20,7 @@ export interface MethodMetadata {
   name: string;
   params: ParamMetadata[];
   referencedTypes: TypeDefinition[];
+  requiredReferenceTypes?: string[];
   returnType: string;
 }
 

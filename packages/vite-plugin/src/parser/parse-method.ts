@@ -1,7 +1,13 @@
-import { IPC_METHOD_DECORATOR_NAMES, IPC_PARAM_INJECTION_DECORATOR_NAMES } from "@electron-ipc-bridge/shared";
+import {
+  IPC_DECORATOR_ON,
+  IPC_DECORATOR_ONCE,
+  IPC_METHOD_DECORATOR_NAMES,
+  IPC_PARAM_INJECTION_DECORATOR_NAMES,
+} from "@electron-ipc-bridge/shared";
 import type { Decorator } from "typescript";
 import { Identifier, isCallExpression, isStringLiteral, MethodDeclaration, TypeChecker } from "typescript";
 
+import { collectExternalTypeReferencesFromType } from "./collect-external-type-references.js";
 import { collectTypeDefinitions, collectTypeDefinitionsFromType } from "./extract-type.js";
 import { getDecorator } from "./get-decorator.js";
 import { resolveReturnType } from "./resolve-return-type.js";
@@ -33,6 +39,7 @@ export const parseMethod = (node: MethodDeclaration, typeChecker: TypeChecker): 
   const returnType = resolveReturnType(node, signature ?? undefined, typeChecker);
 
   const referencedTypes: TypeDefinition[] = [];
+  const requiredReferenceTypes = new Set<string>();
   const seen = new Set<string>();
 
   const paramInfos = node.parameters.map((param) => {
@@ -45,6 +52,9 @@ export const parseMethod = (node: MethodDeclaration, typeChecker: TypeChecker): 
     const type = typeChecker.getTypeAtLocation(param);
     const typeString = typeChecker.typeToString(type);
     const extracted = !hasInjection && param.type ? collectTypeDefinitions(param.type, typeChecker, seen) : [];
+    if (!hasInjection) {
+      collectExternalTypeReferencesFromType(type, typeChecker, requiredReferenceTypes);
+    }
     referencedTypes.push(...extracted);
     params.push({
       name: param.name.getText(),
@@ -63,11 +73,16 @@ export const parseMethod = (node: MethodDeclaration, typeChecker: TypeChecker): 
     referencedTypes.push(...returnTypeRefs);
   }
 
+  if (signature && found !== IPC_DECORATOR_ON && found !== IPC_DECORATOR_ONCE) {
+    collectExternalTypeReferencesFromType(signature.getReturnType(), typeChecker, requiredReferenceTypes);
+  }
+
   return {
     decoratorName: found,
     name,
     params: filteredParams,
     referencedTypes,
+    requiredReferenceTypes: Array.from(requiredReferenceTypes).sort(),
     returnType,
   };
 };

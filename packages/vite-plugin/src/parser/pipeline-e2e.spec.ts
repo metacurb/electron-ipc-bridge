@@ -43,4 +43,18 @@ describe("pipeline e2e", () => {
     expect(runtime).toMatchSnapshot("runtime");
     expect(global).toMatchSnapshot("global");
   });
+
+  it("node-types fixture generates expected types with node reference", () => {
+    const entryPath = path.join(fixturesDir, "node-types", "index.ts");
+    const tsconfigPath = path.join(fixturesDir, "node-types", "tsconfig.json");
+    const { controllers } = findControllers(entryPath, tsconfigPath);
+
+    const runtime = generateRuntimeTypes(controllers);
+    const global = generateGlobalTypes("ipc", "./ipc.types");
+
+    expect(runtime).toContain('/// <reference types="node" />');
+    expect(runtime).toContain("getPlatform(): Promise<NodeJS.Platform>;");
+    expect(runtime).toMatchSnapshot("runtime");
+    expect(global).toMatchSnapshot("global");
+  });
 });

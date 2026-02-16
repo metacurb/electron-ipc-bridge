@@ -25,6 +25,7 @@ const getMethod = (sourceFile: SourceFile, className: string, methodName: string
 
 describe("parseMethod", () => {
   const fixturesDir = path.resolve(__dirname, "fixtures/simple");
+  const nodeTypesFixturesDir = path.resolve(__dirname, "fixtures/node-types");
 
   it("parses IpcHandle method", () => {
     const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "counter.controller.ts");
@@ -73,5 +74,18 @@ describe("parseMethod", () => {
     expect(metadata?.returnType).toBe("ListModel[]");
     const names = metadata?.referencedTypes.map((t) => t.name) ?? [];
     expect(names).toContain("ListModel");
+  });
+
+  it("collects node external type references from return types", () => {
+    const { sourceFile, typeChecker } = createFixtureProgram(nodeTypesFixturesDir, "platform.controller.ts", {
+      types: ["node"],
+    });
+    const method = getMethod(sourceFile, "PlatformController", "getPlatform");
+
+    const metadata = parseMethod(method, typeChecker);
+
+    expect(metadata).toBeDefined();
+    expect(metadata?.returnType).toBe("NodeJS.Platform");
+    expect(metadata?.requiredReferenceTypes).toContain("node");
   });
 });

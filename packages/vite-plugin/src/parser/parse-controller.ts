@@ -41,6 +41,7 @@ export const parseController = (
   });
 
   const referencedTypes = methods.flatMap((m) => m.referencedTypes);
+  const requiredReferenceTypes = Array.from(new Set(methods.flatMap((m) => m.requiredReferenceTypes ?? []))).sort();
 
   return {
     className,
@@ -48,5 +49,6 @@ export const parseController = (
     methods,
     namespace,
     referencedTypes,
+    requiredReferenceTypes,
   };
 };

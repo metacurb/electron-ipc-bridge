@@ -20,6 +20,7 @@ describe("parseController", () => {
       decoratorName: "IpcHandle",
       name: "mockMethod",
       params: [],
+      referencedTypes: [],
       returnType: "void",
     } as unknown as MethodMetadata);
   });
@@ -43,5 +44,40 @@ describe("parseController", () => {
     });
 
     expect(parsed).toBe(true);
+  });
+
+  it("aggregates requiredReferenceTypes from methods and deduplicates", () => {
+    mockParseMethod
+      .mockReturnValueOnce({
+        decoratorName: "IpcHandle",
+        name: "getPlatform",
+        params: [],
+        referencedTypes: [],
+        requiredReferenceTypes: ["node"],
+        returnType: "NodeJS.Platform",
+      } as unknown as MethodMetadata)
+      .mockReturnValueOnce({
+        decoratorName: "IpcHandle",
+        name: "getPlatformAgain",
+        params: [],
+        referencedTypes: [],
+        requiredReferenceTypes: ["node"],
+        returnType: "NodeJS.Platform",
+      } as unknown as MethodMetadata)
+      .mockReturnValue(null);
+
+    const { sourceFile, typeChecker } = createFixtureProgram(fixturesDir, "counter.controller.ts");
+    let metadata: ReturnType<typeof parseController> | undefined;
+
+    forEachChild(sourceFile, (node) => {
+      if (isClassDeclaration(node) && node.name?.text === "CounterController") {
+        const decorator = getDecorator(node, "IpcController");
+        if (decorator) {
+          metadata = parseController(node, decorator, sourceFile, typeChecker);
+        }
+      }
+    });
+
+    expect(metadata?.requiredReferenceTypes).toEqual(["node"]);
   });
 });

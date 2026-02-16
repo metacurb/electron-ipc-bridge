@@ -52,4 +52,16 @@ describe("generateRuntimeTypes", () => {
     expect(output).toContain("foo:");
     expect(output).toContain("bar(): Promise<string>;");
   });
+
+  it("emits triple-slash references for required external types", () => {
+    const output = generateRuntimeTypes([
+      makeController({
+        namespace: "system",
+        requiredReferenceTypes: ["node"],
+      }),
+    ]);
+
+    expect(output).toContain('/// <reference types="node" />');
+    expect(output).toContain("export interface IpcApi {");
+  });
 });
