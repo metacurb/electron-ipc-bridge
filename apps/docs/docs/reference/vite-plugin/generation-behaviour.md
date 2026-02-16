@@ -12,6 +12,14 @@ description: What the plugin analyses, what it generates, and regeneration rules
 - Reachable controller files discovered from `createIpcApp(...)`
 - Preload entry (`PluginOptions.preload`) to infer API root from `setupPreload(...)` when statically detectable
 
+## Controller resolution paths
+
+The plugin resolves the `controllers` value in `createIpcApp(...)` using three paths, tried in order:
+
+1. **Array literal** — `controllers: [FooController, BarController]` — resolved directly from the array elements.
+2. **Call expression with module/class** — `controllers: getIpcControllers(SomeModule)` — follows call arguments to class declarations and reads `controllers`/`providers` from decorator metadata.
+3. **Resolution strategy fallback** — if paths 1 and 2 yield no controllers, the optional `resolutionStrategy` runs. For example, the `"nest"` strategy locates `NestFactory.createApplicationContext(ModuleClass)` and recursively walks `@Module({ imports })` to discover controllers.
+
 ## What is generated
 
 - Runtime types module (for importable `IpcApi` contract)
@@ -43,6 +51,6 @@ description: What the plugin analyses, what it generates, and regeneration rules
 
 ## Parser limitations
 
-- Controllers must be discoverable from a static `controllers: [...]` shape (or supported module/provider patterns)
+- Controllers must be discoverable from a static `controllers: [...]` shape, a supported module/provider pattern, or via a configured `resolutionStrategy`
 - Namespace inference from preload is limited to statically detectable `setupPreload(...)` usage
 - When namespace inference is not possible, generated global types default to `window.ipc`

@@ -19,4 +19,32 @@ describe("findControllers", () => {
     expect(processCreateIpcAppCall).toHaveBeenCalled();
     expect(processedFiles.size).toBeGreaterThan(0);
   });
+
+  it("passes no resolution strategy to processCreateIpcAppCall when resolutionStrategy is omitted", () => {
+    const entryPath = path.join(fixturesDir, "index.ts");
+    findControllers(entryPath, path.join(fixturesDir, "tsconfig.json"));
+
+    expect(processCreateIpcAppCall).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      undefined,
+    );
+  });
+
+  it("passes nest strategy function to processCreateIpcAppCall when resolutionStrategy is 'nest'", () => {
+    const entryPath = path.join(fixturesDir, "index.ts");
+    findControllers(entryPath, path.join(fixturesDir, "tsconfig.json"), undefined, "nest");
+
+    expect(processCreateIpcAppCall).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.any(Function),
+    );
+  });
 });

@@ -25,12 +25,27 @@ export default {
 
 ## Options
 
-| Option          | Description                                                                                                                   |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `main`          | Path to main process entry. Default: `"src/main/index.ts"`                                                                    |
-| `preload`       | Path to preload entry. Default: `"src/preload/index.ts"`                                                                      |
-| `types.global`  | Output path for generated global `Window` augmentation (`.d.ts`). Default: preload dir + `ipc.d.ts`. Set `false` to disable.  |
-| `types.runtime` | Output path for generated runtime types module. Default: auto (e.g. `src/renderer/src/ipc.types.ts`). Set `false` to disable. |
+| Option               | Description                                                                                                                   |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `main`               | Path to main process entry. Default: `"src/main/index.ts"`                                                                    |
+| `preload`            | Path to preload entry. Default: `"src/preload/index.ts"`                                                                      |
+| `types.global`       | Output path for generated global `Window` augmentation (`.d.ts`). Default: preload dir + `ipc.d.ts`. Set `false` to disable.  |
+| `types.runtime`      | Output path for generated runtime types module. Default: auto (e.g. `src/renderer/src/ipc.types.ts`). Set `false` to disable. |
+| `resolutionStrategy` | Optional strategy when `controllers` is a call and default resolution finds nothing. Set to `"nest"` for NestJS. See below.   |
+
+### Resolution behaviour
+
+- **Array:** `createIpcApp({ controllers: [FooController, ...] })` — resolved from the array.
+- **Call with module/class:** `createIpcApp({ controllers: getIpcControllers(SomeModule) })` — plugin follows call args to class refs and resolves from decorators with `controllers`/`providers` (e.g. Nest `@Module`). No strategy needed.
+- **Call with no static refs (e.g. DI):** When the above yields no controllers, an optional `resolutionStrategy` runs. For Nest, set `resolutionStrategy: "nest"`.
+
+```ts
+import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
+
+export default {
+  plugins: [electronIpcBridge({ resolutionStrategy: "nest" })],
+};
+```
 
 Full defaults and semantics: [Plugin Options](https://metacurb.github.io/electron-ipc-bridge/reference/vite-plugin/plugin-options) · [Generation Behaviour](https://metacurb.github.io/electron-ipc-bridge/reference/vite-plugin/generation-behaviour).
 

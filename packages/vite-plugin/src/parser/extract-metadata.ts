@@ -8,10 +8,13 @@ export const extractControllerMetadata = (sourceFile: SourceFile, typeChecker: T
   const controllers: ControllerMetadata[] = [];
 
   forEachChild(sourceFile, (node) => {
-    if (isClassDeclaration(node) && node.name) {
+    if (isClassDeclaration(node)) {
       const decorator = getDecorator(node, "IpcController");
       if (decorator) {
-        controllers.push(parseController(node, decorator, sourceFile, typeChecker));
+        const controller = parseController(node, decorator, sourceFile, typeChecker);
+        if (controller) {
+          controllers.push(controller);
+        }
       }
     }
   });

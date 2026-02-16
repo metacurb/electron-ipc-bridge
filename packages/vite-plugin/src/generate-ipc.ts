@@ -10,7 +10,7 @@ import { findControllers } from "./parser/find-controllers.js";
 import { PluginState } from "./plugin-state.js";
 import { resolveApiRootFromPreload } from "./preload/resolve-api-root.js";
 import { resolveTypePaths } from "./resolve-type-paths.js";
-import type { PluginTypesOptions } from "./types.js";
+import type { PluginTypesOptions, ResolutionStrategy } from "./types.js";
 
 export function generateIpc(
   root: string,
@@ -20,10 +20,11 @@ export function generateIpc(
     main: string;
     preload: string;
     types: PluginTypesOptions;
+    resolutionStrategy?: ResolutionStrategy;
   },
 ): void {
   try {
-    const { main, preload, types } = options;
+    const { main, preload, resolutionStrategy, types } = options;
     const preloadPath = path.resolve(root, preload);
     const { dependencies: preloadDependencies, namespace: resolvedApiRoot } = resolveApiRootFromPreload(preloadPath);
     const entryPath = path.resolve(root, main);
@@ -33,7 +34,12 @@ export function generateIpc(
     }
 
     logger.info(`Generating IPC types from ${entryPath}...`);
-    const { controllers, processedFiles, program } = findControllers(entryPath, undefined, state.getProgram());
+    const { controllers, processedFiles, program } = findControllers(
+      entryPath,
+      undefined,
+      state.getProgram(),
+      resolutionStrategy,
+    );
     state.setProgram(program);
 
     if (controllers.length === 0) {

@@ -115,6 +115,16 @@ Most DI containers have a way to resolve a class. The examples below are a start
     }
     ```
 
+    :::tip Vite plugin configuration
+    If you are using the `@electron-ipc-bridge/vite-plugin`, set `resolutionStrategy: "nest"` so the plugin can discover your controllers through the NestJS module tree:
+
+    ```ts
+    electronIpcBridge({ resolutionStrategy: "nest" })
+    ```
+
+    See [Plugin Options — Resolution strategy](/reference/vite-plugin/plugin-options#resolution-strategy) for details.
+    :::
+
   </TabItem>
 </Tabs>
 

@@ -14,8 +14,18 @@ import {
   TypeChecker,
 } from "typescript";
 
+import { nestResolutionStrategy } from "../strategies/nest.js";
+import type { DependencyResolutionStrategy } from "../strategies/types.js";
+import type { ResolutionStrategy } from "../types.js";
+
 import { processCreateIpcAppCall } from "./process-create-ipc-app-call.js";
 import { ControllerMetadata } from "./types.js";
+
+/** Maps a user-facing strategy name (e.g. `"nest"`) to its concrete implementation function. */
+function resolveStrategy(option?: ResolutionStrategy): DependencyResolutionStrategy | undefined {
+  if (option === "nest") return nestResolutionStrategy;
+  return undefined;
+}
 
 export interface FindControllersResult {
   controllers: ControllerMetadata[];
@@ -41,7 +51,9 @@ export const findControllers = (
   entryFile: string,
   tsConfigPath?: string,
   oldProgram?: Program,
+  resolutionStrategy?: ResolutionStrategy,
 ): FindControllersResult => {
+  const strategy = resolveStrategy(resolutionStrategy);
   const searchConfig = tsConfigPath || "tsconfig.node.json";
   let configFile = findConfigFile(path.dirname(entryFile), sys.fileExists, searchConfig);
 
@@ -72,7 +84,7 @@ export const findControllers = (
 
   forEachChild(sourceFile, function visit(node) {
     if (isCallExpression(node) && isCreateIpcAppCall(node, typeChecker)) {
-      processCreateIpcAppCall(node, typeChecker, processedFiles, controllers, fileCache);
+      processCreateIpcAppCall(node, typeChecker, processedFiles, controllers, fileCache, strategy);
     }
     forEachChild(node, visit);
   });

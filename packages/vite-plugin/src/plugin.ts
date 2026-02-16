@@ -31,6 +31,7 @@ export { type PluginOptions, type PluginTypesOptions } from "./types.js";
 export function electronIpcBridge({
   main = DEFAULT_MAIN_ENTRY,
   preload = DEFAULT_PRELOAD_ENTRY,
+  resolutionStrategy,
   types = {},
 }: PluginOptions = {}): Plugin {
   let root = process.cwd();
@@ -39,7 +40,7 @@ export function electronIpcBridge({
   const state = new PluginState();
 
   const generate = () => {
-    generateIpc(root, logger, state, { main, preload, types });
+    generateIpc(root, logger, state, { main, preload, resolutionStrategy, types });
   };
 
   return {

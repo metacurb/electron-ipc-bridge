@@ -1,7 +1,9 @@
 import fs from "fs";
 import path from "path";
+import { Logger } from "vite";
 
 import { generateIpc } from "./generate-ipc.js";
+import { findControllers } from "./parser/find-controllers.js";
 import { PluginState } from "./plugin-state.js";
 
 jest.mock("fs");
@@ -62,6 +64,16 @@ describe("generateIpc", () => {
   };
   let mockState: PluginState;
 
+  const mockLogger: jest.Mocked<Logger> = {
+    clearScreen: jest.fn(),
+    error: jest.fn(),
+    hasErrorLogged: jest.fn(),
+    hasWarned: false,
+    info: jest.fn(),
+    warn: jest.fn(),
+    warnOnce: jest.fn(),
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockState = new PluginState();
@@ -76,7 +88,7 @@ describe("generateIpc", () => {
   });
 
   it("should generate types when main entry exists", () => {
-    generateIpc(mockRoot, mockState, mockOptions);
+    generateIpc(mockRoot, mockLogger, mockState, mockOptions);
 
     expect(fs.existsSync).toHaveBeenCalledWith("/root/src/main.ts");
     expect(fs.writeFileSync).toHaveBeenCalledWith("/root/dist/runtime.ts", "mockRuntimeTypes");
@@ -85,13 +97,19 @@ describe("generateIpc", () => {
 
   it("should warn and return if main entry does not exist", () => {
     mockExistsSync.mockReturnValue(false);
-    const consoleSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
 
-    generateIpc(mockRoot, mockState, mockOptions);
+    generateIpc(mockRoot, mockLogger, mockState, mockOptions);
 
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Main entry not found"));
+    expect(mockLogger.warn).toHaveBeenCalledWith(expect.stringContaining("Main entry not found"));
     expect(fs.writeFileSync).not.toHaveBeenCalled();
+  });
 
-    consoleSpy.mockRestore();
+  it("should pass resolutionStrategy to findControllers when provided", () => {
+    generateIpc(mockRoot, mockLogger, mockState, {
+      ...mockOptions,
+      resolutionStrategy: "nest",
+    });
+
+    expect(findControllers).toHaveBeenCalledWith(expect.any(String), undefined, undefined, "nest");
   });
 });

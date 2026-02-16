@@ -16,9 +16,12 @@ interface PluginTypesOptions {
   runtime?: string | false;
 }
 
+type ResolutionStrategy = "nest";
+
 interface PluginOptions {
   main?: string;
   preload?: string;
+  resolutionStrategy?: ResolutionStrategy;
   types?: PluginTypesOptions;
 }
 ```
@@ -38,6 +41,7 @@ import type { PluginOptions } from "@electron-ipc-bridge/vite-plugin";
 
 - `main`: `"src/main/index.ts"`
 - `preload`: `"src/preload/index.ts"`
+- `resolutionStrategy`: `undefined` (no fallback strategy)
 - `types.runtime`:
   - prefers `"src/renderer/src/ipc.types.ts"` when `src/renderer/src` exists
   - otherwise falls back to `"src/ipc.types.ts"`
@@ -49,6 +53,30 @@ import type { PluginOptions } from "@electron-ipc-bridge/vite-plugin";
 - `types.global = false`: skip global `Window` augmentation generation
 - both disabled: plugin logs warning and generates nothing
 - `types.global` requires runtime output (plugin throws if global generation is requested without runtime output)
+
+## Resolution strategy
+
+When the `controllers` value in `createIpcApp(...)` is a call expression (e.g. `getIpcControllers(app)`), the plugin first tries to statically resolve controllers from the call's arguments. If that yields nothing, it falls back to the `resolutionStrategy` — an optional, library-specific resolver.
+
+| Strategy | When to use                                                   | What it does                                                                                                  |
+| -------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `"nest"` | NestJS apps using `NestFactory.createApplicationContext(...)` | Finds the root module class, then recursively walks `@Module({ imports: [...] })` to discover all controllers |
+
+```ts
+import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
+
+export default {
+  plugins: [
+    electronIpcBridge({
+      resolutionStrategy: "nest",
+    }),
+  ],
+};
+```
+
+:::info
+You only need `resolutionStrategy` when your controllers are supplied through a runtime helper that the plugin cannot statically trace. If you pass controllers directly as an array literal, or through a statically resolvable module/class reference, no strategy is needed.
+:::
 
 ## Namespace shape in generated globals
 

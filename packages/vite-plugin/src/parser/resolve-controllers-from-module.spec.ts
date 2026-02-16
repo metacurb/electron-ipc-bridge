@@ -1,17 +1,17 @@
 import path from "path";
 import { forEachChild, isCallExpression } from "typescript";
 
-import { resolveController } from "./resolve-controller";
 import { resolveControllersFromModule } from "./resolve-controllers-from-module";
+import { resolveControllersFromModuleClass } from "./resolve-controllers-from-module-class";
 import { createFixtureProgram } from "./test-utils";
 import { ControllerMetadata } from "./types";
 
-jest.mock("./resolve-controller");
+jest.mock("./resolve-controllers-from-module-class");
 
 describe("resolveControllersFromModule", () => {
   const nestFixturesDir = path.resolve(__dirname, "fixtures/nest-module");
 
-  it("should resolve controllers from module providers", () => {
+  it("should find class declaration and call resolveControllersFromModuleClass", () => {
     const { sourceFile, typeChecker } = createFixtureProgram(nestFixturesDir, "index.ts");
     const processedFiles = new Set<string>();
     const controllers: ControllerMetadata[] = [];
@@ -27,6 +27,6 @@ describe("resolveControllersFromModule", () => {
     });
 
     expect(foundCall).toBe(true);
-    expect(resolveController).toHaveBeenCalled();
+    expect(resolveControllersFromModuleClass).toHaveBeenCalled();
   });
 });

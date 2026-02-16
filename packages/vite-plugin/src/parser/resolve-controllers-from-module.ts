@@ -1,17 +1,6 @@
-import {
-  CallExpression,
-  isArrayLiteralExpression,
-  isCallExpression,
-  isClassDeclaration,
-  isIdentifier,
-  isObjectLiteralExpression,
-  isPropertyAssignment,
-  PropertyAssignment,
-  TypeChecker,
-} from "typescript";
+import { CallExpression, isClassDeclaration, isIdentifier, TypeChecker } from "typescript";
 
-import { getDecorator } from "./get-decorator.js";
-import { resolveController } from "./resolve-controller.js";
+import { resolveControllersFromModuleClass } from "./resolve-controllers-from-module-class.js";
 import { ControllerMetadata } from "./types.js";
 
 export const resolveControllersFromModule = (
@@ -37,21 +26,6 @@ export const resolveControllersFromModule = (
     const targetDecl = targetSymbol.declarations?.[0];
     if (!targetDecl || !isClassDeclaration(targetDecl)) return;
 
-    const moduleDecorator = getDecorator(targetDecl, "Module");
-    if (!moduleDecorator || !isCallExpression(moduleDecorator.expression)) return;
-
-    const moduleArgs = moduleDecorator.expression.arguments;
-    const moduleOptions = moduleArgs[0];
-    if (!moduleOptions || !isObjectLiteralExpression(moduleOptions)) return;
-
-    const providersProp = moduleOptions.properties.find(
-      (p): p is PropertyAssignment => isPropertyAssignment(p) && isIdentifier(p.name) && p.name.text === "providers",
-    );
-    if (!providersProp || !isArrayLiteralExpression(providersProp.initializer)) return;
-
-    const providerElements = providersProp.initializer.elements;
-    providerElements.forEach((element) => {
-      resolveController(element, typeChecker, processedFiles, controllers, fileCache);
-    });
+    resolveControllersFromModuleClass(targetDecl, typeChecker, processedFiles, controllers, fileCache);
   }
 };
