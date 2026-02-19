@@ -30,25 +30,3 @@ Method names are automatically converted from `camelCase` to `snake_case` to fol
 | `getUser`           | `users.get_user`            |
 | `createUserProfile` | `users.create_user_profile` |
 | `updateID`          | `users.update_id`           |
-
-## Debugging
-
-Because the channels are standard [Electron IPC](https://www.electronjs.org/docs/latest/api/ipc-main) channels, you can use standard tools to spectate or debug them.
-
-- **[electron-debug](https://github.com/sindresorhus/electron-debug)**: Can log IPC messages to the console.
-- **DevTools**: You can monitor network/IPC traffic in some DevTools extensions or by simply logging in the main process.
-
-## Manual Invocation
-
-While we recommend using the type-safe `window.ipc` object (or your custom namespace), you can manually invoke these channels from the renderer if necessary.
-
-```ts
-// Invoking a handle (Promise-based)
-const user = await window.electron.ipcRenderer.invoke("users.get_user", { id: 1 });
-
-// Sending a message (Fire-and-forget)
-window.electron.ipcRenderer.send("analytics.track_event", { name: "login" });
-```
-
-:::warning
-Manually invoking channels bypasses the type safety provided by the library. Use this only when necessary for interoperability with other languages or tools.
