@@ -43,4 +43,32 @@ describe("wrapWithCorrelation", () => {
     expect(handler).toHaveBeenCalled();
     expect(randomUUID).not.toHaveBeenCalled();
   });
+
+  test("should preserve 'this' context", () => {
+    const handler = jest.fn(function (this: { foo: string }) {
+      return this.foo;
+    });
+    const context = { foo: "bar" };
+    const wrapped = wrapWithCorrelation(handler, true);
+
+    const result = wrapped.call(context);
+
+    expect(result).toBe("bar");
+    expect(handler).toHaveBeenCalled();
+  });
+
+  test("should preserve 'this' context when called as a method", () => {
+    const obj = {
+      foo: "bar",
+      method() {
+        return this.foo;
+      },
+    };
+    // @ts-expect-error - method wrapping
+    obj.method = wrapWithCorrelation(obj.method, true);
+
+    const result = obj.method();
+
+    expect(result).toBe("bar");
+  });
 });
