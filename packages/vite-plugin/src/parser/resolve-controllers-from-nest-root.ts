@@ -15,6 +15,7 @@ import {
 } from "typescript";
 
 import { normalizePath } from "../normalize-path.js";
+
 import { resolveControllersFromModuleClass } from "./resolve-controllers-from-module-class.js";
 import { ControllerMetadata } from "./types.js";
 

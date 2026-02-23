@@ -2,6 +2,7 @@ import path from "path";
 import { createProgram, forEachChild, isClassDeclaration } from "typescript";
 
 import { normalizePath } from "../normalize-path";
+
 import { resolveControllersFromNestRoot } from "./resolve-controllers-from-nest-root";
 import { ControllerMetadata } from "./types";
 
