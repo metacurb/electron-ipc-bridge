@@ -50,6 +50,21 @@ Scoped builds/checks:
 - `pnpm --filter docs build`
 - `pnpm --filter docs start`
 
+## Dependency Management
+
+Use repository scripts to keep dependency versions consistent across workspaces:
+
+- `pnpm deps:check`: validate dependency versions are in sync (`dependencies` and `devDependencies`).
+- `pnpm deps:check:peers`: validate published package peer dependency contracts.
+- `pnpm deps:fix`: normalize mismatched versions without fetching new releases.
+- `pnpm deps:update`: update to latest versions via script, then normalize and refresh the lockfile.
+
+Guidelines:
+
+- Prefer `pnpm deps:update` over manual `package.json` edits when upgrading dependencies.
+- Run `pnpm deps:check` (and `pnpm deps:check:peers` when touching package manifests) before opening a PR.
+- Only edit peer dependency ranges intentionally and keep them aligned with the peer contract check script.
+
 ## Pull Request Checklist
 
 Before opening a PR, run the checks relevant to your change:

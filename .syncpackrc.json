@@ -1,0 +1,4 @@
+{
+  "$schema": "https://unpkg.com/syncpack@14.0.0/dist/schema.json",
+  "source": ["package.json", "packages/*/package.json", "apps/docs/package.json", "apps/examples/*/package.json"]
+}

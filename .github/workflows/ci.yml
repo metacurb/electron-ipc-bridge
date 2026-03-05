@@ -26,6 +26,16 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - run: pnpm deps:check
+
+      - run: pnpm deps:check:peers
+
+      - run: pnpm --filter @electron-ipc-bridge/shared build
+
+      - run: pnpm --filter @electron-ipc-bridge/core build
+
+      - run: pnpm --filter @electron-ipc-bridge/vite-plugin build
+
       - run: pnpm lint
 
   test:
@@ -42,6 +52,10 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - run: pnpm deps:check
+
+      - run: pnpm deps:check:peers
+
       - run: pnpm --filter @electron-ipc-bridge/shared --filter @electron-ipc-bridge/core --filter @electron-ipc-bridge/vite-plugin test
 
   build:
@@ -57,6 +71,10 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      - run: pnpm deps:check
+
+      - run: pnpm deps:check:peers
 
       - run: pnpm --filter @electron-ipc-bridge/shared build
 
