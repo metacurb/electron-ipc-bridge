@@ -74,5 +74,6 @@ Run the smallest relevant subset:
 - Release notes mapping:
   - `feat` -> `Added`
   - `fix` -> `Fixed`
-  - `perf`, `refactor`,
+  - `perf` -> `Changed`
+  - `refactor` -> `Changed`
   - `deps` -> `Changed`

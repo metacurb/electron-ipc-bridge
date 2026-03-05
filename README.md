@@ -14,10 +14,10 @@
     <img src="https://img.shields.io/npm/v/@electron-ipc-bridge/core?style=for-the-badge&label=version" alt="npm version (@electron-ipc-bridge/core)" />
   </a>
   <a href="https://www.npmjs.com/package/@electron-ipc-bridge/core">
-    <img src="https://img.shields.io/npm/dm/@electron-ipc-bridge/core?style=for-the-badge&label=core%20downloads" alt="npm downloads (@electron-ipc-bridge/core)" />
+    <img src="https://img.shields.io/npm/dm/@electron-ipc-bridge/core?style=for-the-badge&label=core%20downloads" alt="Core package downloads" />
   </a>
   <a href="https://www.npmjs.com/package/@electron-ipc-bridge/vite-plugin">
-    <img src="https://img.shields.io/npm/dm/@electron-ipc-bridge/vite-plugin?style=for-the-badge&label=vite-plugin%20downloads" alt="npm downloads (@electron-ipc-bridge/vite-plugin)" />
+    <img src="https://img.shields.io/npm/dm/@electron-ipc-bridge/vite-plugin?style=for-the-badge&label=vite-plugin%20downloads" alt="Vite plugin downloads" />
   </a>
 </p>
 

@@ -89,7 +89,9 @@ Release notes mapping:
 
 - `feat` -> `Added`
 - `fix` -> `Fixed`
-- `perf`, `refactor`, `deps` -> `Changed`
+- `perf` -> `Changed`
+- `refactor` -> `Changed`
+- `deps` -> `Changed`
 
 ## Release Process (Automated)
 
