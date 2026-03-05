@@ -24,8 +24,8 @@
     "@electron-ipc-bridge/core": "workspace:*",
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
-    "@nestjs/common": "^11.1.14",
-    "@nestjs/core": "^11.1.14",
+    "@nestjs/common": "^11.1.16",
+    "@nestjs/core": "^11.1.16",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
@@ -37,10 +37,10 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
-    "electron": "^40.6.1",
+    "electron": "^40.7.0",
     "electron-builder": "^26.8.1",
     "electron-vite": "^5.0.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
