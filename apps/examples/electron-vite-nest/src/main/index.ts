@@ -11,9 +11,11 @@ import icon from '../../resources/icon.png?asset'
 
 import { IpcModule } from './ipc.module'
 
-const getIpcControllersFromModule = (ModuleClass: new (...args: unknown[]) => unknown) => {
+const getIpcControllersFromModule = (
+  ModuleClass: new (...args: unknown[]) => unknown
+): (new (...args: unknown[]) => unknown)[] => {
   const providers = (Reflect.getMetadata('providers', ModuleClass) as unknown[] | undefined) ?? []
-  return providers.filter(isIpcController)
+  return providers.filter(isIpcController) as (new (...args: unknown[]) => unknown)[]
 }
 
 function createWindow(nestContext: INestApplicationContext): void {
