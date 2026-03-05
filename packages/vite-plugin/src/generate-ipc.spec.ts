@@ -6,7 +6,7 @@ import { Logger } from "vite";
 import { generateIpc } from "./generate-ipc.js";
 import { findControllers, type FindControllersResult } from "./parser/find-controllers.js";
 import { PluginState } from "./plugin-state.js";
-import { type ResolvedTypePaths,resolveTypePaths } from "./resolve-type-paths.js";
+import { type ResolvedTypePaths, resolveTypePaths } from "./resolve-type-paths.js";
 
 jest.mock("fs");
 jest.mock("path", () => {
