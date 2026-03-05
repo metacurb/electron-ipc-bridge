@@ -26,6 +26,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - run: pnpm --filter @electron-ipc-bridge/shared build
+
+      - run: pnpm --filter @electron-ipc-bridge/core build
+
+      - run: pnpm --filter @electron-ipc-bridge/vite-plugin build
+
       - run: pnpm lint
 
   test:
