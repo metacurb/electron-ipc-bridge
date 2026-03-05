@@ -1,0 +1,72 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "draft": true,
+  "draft-pull-request": true,
+  "force-tag-creation": true,
+  "include-component-in-tag": true,
+  "plugins": [
+    {
+      "type": "linked-versions",
+      "groupName": "packages",
+      "components": ["core", "vite-plugin"]
+    }
+  ],
+  "packages": {
+    "packages/core": {
+      "release-type": "node",
+      "component": "core",
+      "include-v-in-tag": true,
+      "changelog-path": "packages/core/CHANGELOG.md",
+      "changelog-sections": [
+        {
+          "type": "feat",
+          "section": "Added"
+        },
+        {
+          "type": "fix",
+          "section": "Fixed"
+        },
+        {
+          "type": "perf",
+          "section": "Changed"
+        },
+        {
+          "type": "refactor",
+          "section": "Changed"
+        },
+        {
+          "type": "deps",
+          "section": "Changed"
+        }
+      ]
+    },
+    "packages/vite-plugin": {
+      "release-type": "node",
+      "component": "vite-plugin",
+      "include-v-in-tag": true,
+      "changelog-path": "packages/vite-plugin/CHANGELOG.md",
+      "changelog-sections": [
+        {
+          "type": "feat",
+          "section": "Added"
+        },
+        {
+          "type": "fix",
+          "section": "Fixed"
+        },
+        {
+          "type": "perf",
+          "section": "Changed"
+        },
+        {
+          "type": "refactor",
+          "section": "Changed"
+        },
+        {
+          "type": "deps",
+          "section": "Changed"
+        }
+      ]
+    }
+  }
+}

@@ -1,11 +1,12 @@
 import fs from "fs";
 import path from "path";
+import { Program } from "typescript";
 import { Logger } from "vite";
 
 import { generateIpc } from "./generate-ipc.js";
-import { findControllers } from "./parser/find-controllers.js";
+import { findControllers, type FindControllersResult } from "./parser/find-controllers.js";
 import { PluginState } from "./plugin-state.js";
-import { resolveTypePaths } from "./resolve-type-paths.js";
+import { type ResolvedTypePaths, resolveTypePaths } from "./resolve-type-paths.js";
 
 jest.mock("fs");
 jest.mock("path", () => {
@@ -127,9 +128,9 @@ describe("generateIpc", () => {
   it("should warn if no createIpcApp call found", () => {
     jest.mocked(findControllers).mockReturnValueOnce({
       controllers: [],
-      processedFiles: ["mockFile.ts"],
-      program: {},
-    } as any);
+      processedFiles: new Set(["mockFile.ts"]),
+      program: {} as Program,
+    } satisfies FindControllersResult);
 
     generateIpc(mockRoot, mockLogger, mockState, mockOptions);
 
@@ -138,9 +139,9 @@ describe("generateIpc", () => {
 
   it("should warn if both runtime and global type outputs are disabled", () => {
     jest.mocked(resolveTypePaths).mockReturnValueOnce({
-      globalPath: undefined,
-      runtimePath: undefined,
-    } as any);
+      globalPath: null,
+      runtimePath: null,
+    } satisfies ResolvedTypePaths);
 
     generateIpc(mockRoot, mockLogger, mockState, mockOptions);
 
