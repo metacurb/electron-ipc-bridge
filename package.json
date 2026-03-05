@@ -11,7 +11,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "deps:check": "pnpm exec syncpack lint --config .syncpackrc.json --dependency-types \"dev,prod\"",
+    "deps:fix": "pnpm exec syncpack fix --config .syncpackrc.json --dependency-types \"dev,prod\"",
+    "deps:update": "pnpm exec syncpack update --config .syncpackrc.json --dependency-types \"dev,prod\" --target latest && pnpm run deps:fix && pnpm install",
+    "deps:check:peers": "node scripts/check-peer-ranges.mjs"
   },
   "packageManager": "pnpm@10.25.0",
   "devDependencies": {
@@ -30,6 +34,7 @@
     "lint-staged": "^16.3.1",
     "prettier": "^3.8.1",
     "reflect-metadata": "^0.2.2",
+    "syncpack": "^14.0.0",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0"
