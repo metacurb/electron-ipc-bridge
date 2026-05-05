@@ -2,7 +2,7 @@ import { SerializedIpcContract } from "@electron-ipc-bridge/shared";
 import { ipcRenderer } from "electron";
 
 import { createPreloadApi } from "./create-preload-api";
-import { HandleMethod, SendMethod } from "./types";
+import { HandleMethod } from "./types";
 
 const mockIpcRenderer = jest.mocked(ipcRenderer);
 
@@ -46,9 +46,9 @@ describe("createPreloadApi", () => {
 
   it("should create send method that calls ipcRenderer.send", () => {
     const api = createPreloadApi(contract);
-    const onMethod = api.test.onMethod as SendMethod;
+    const onMethod = api.test.onMethod;
 
-    onMethod("arg1", "arg2");
+    void onMethod("arg1", "arg2");
 
     expect(ipcRenderer.send).toHaveBeenCalledWith("test.on", "arg1", "arg2");
   });

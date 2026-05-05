@@ -12,9 +12,9 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "deps:check": "pnpm exec syncpack lint --config .syncpackrc.json --dependency-types \"dev,prod\"",
-    "deps:fix": "pnpm exec syncpack fix --config .syncpackrc.json --dependency-types \"dev,prod\"",
-    "deps:update": "pnpm exec syncpack update --config .syncpackrc.json --dependency-types \"dev,prod\" --target latest && pnpm run deps:fix && pnpm install",
+    "deps:check": "pnpm exec syncpack lint --dependency-types \"dev,prod\"",
+    "deps:fix": "pnpm exec syncpack fix --dependency-types \"dev,prod\"",
+    "deps:update": "pnpm exec syncpack update --dependency-types \"dev,prod\" --target latest && pnpm run deps:fix && pnpm install",
     "deps:check:peers": "node scripts/check-peer-ranges.mjs"
   },
   "packageManager": "pnpm@10.25.0",

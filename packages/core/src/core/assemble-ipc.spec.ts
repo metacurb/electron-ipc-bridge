@@ -1,5 +1,5 @@
 import { getControllerMetadata } from "../metadata/get-controller-metadata";
-import { Constructor, IpcControllerMetadata, IpcHandlerMetadata } from "../metadata/types";
+import { IpcControllerMetadata, IpcHandlerMetadata } from "../metadata/types";
 
 import { assembleIpc } from "./assemble-ipc";
 import { registerHandler } from "./register-handler";
@@ -28,7 +28,7 @@ describe("assembleIpc", () => {
     handlers: new Map(handlers.map((h) => [h.methodName, h])),
     id: "test-id",
     namespace: "test-namespace",
-    target: class {} as Constructor,
+    target: class {},
   });
 
   beforeEach(() => {
