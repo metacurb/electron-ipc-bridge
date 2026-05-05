@@ -3,8 +3,8 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "composite": true
+    "composite": true,
+    "types": ["jest", "node"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.spec.ts", "src/**/fixtures/**", "src/parser/test-utils.ts"]
+  "include": ["src/**/*"]
 }
