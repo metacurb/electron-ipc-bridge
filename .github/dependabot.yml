@@ -5,6 +5,14 @@ updates:
     schedule:
       interval: "monthly"
     groups:
-      npm-workspace:
+      npm-workspace-minor-patch:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      npm-workspace-major:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
