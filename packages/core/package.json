@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@electron-ipc-bridge/shared": "workspace:*",
-    "electron": "^44.4.5",
+    "electron": "^44.5.1",
     "esbuild": "^0.28.2"
   }
 }
