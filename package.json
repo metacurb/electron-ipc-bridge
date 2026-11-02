@@ -22,7 +22,7 @@
     "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.6.6",
-    "electron": "^44.9.1",
+    "electron": "^45.1.0",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-perfectionist": "^5.13.0",
@@ -36,7 +36,7 @@
     "reflect-metadata": "^0.2.2",
     "syncpack": "^15.3.3",
     "ts-jest": "^29.4.15",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "typescript-eslint": "^8.72.1"
   }
 }
