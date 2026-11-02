@@ -4,6 +4,11 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    ignore:
+      # The Vite plugin and ts-jest require the JavaScript compiler API from TypeScript 6.
+      - dependency-name: "typescript"
+        update-types:
+          - "version-update:semver-major"
     groups:
       npm-workspace-minor-patch:
         patterns:
